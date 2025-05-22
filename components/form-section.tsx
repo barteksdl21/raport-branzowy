@@ -47,15 +47,37 @@ export function FormSection({ defaultReport = "" }: FormSectionProps) {
     setFormState((prev) => ({ ...prev, [name]: checked }))
   }
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsSubmitting(true)
 
-    // Simulate form submission
-    setTimeout(() => {
-      setIsSubmitting(false)
-      setIsSubmitted(true)
-    }, 1500)
+    try {
+      const response = await fetch('/api/send-report', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          firstName: formState.firstName,
+          lastName: formState.lastName,
+          email: formState.email,
+          company: formState.company,
+          report: formState.report,
+        }),
+      });
+      
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to send report');
+      }
+      
+      setIsSubmitted(true);
+    } catch (error) {
+      console.error('Error submitting form:', error);
+      alert('Wystąpił błąd podczas wysyłania formularza. Spróbuj ponownie później.');
+    } finally {
+      setIsSubmitting(false);
+    }
   }
 
   return (
