@@ -13,7 +13,6 @@ export default function Home() {
       <ReportsSection />
       <BenefitsSection />
       <AboutSection />
-      <TestimonialsSection />
       <FormSection />
       <FaqSection />
     </div>

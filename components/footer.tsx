@@ -160,7 +160,6 @@ export default function Footer() {
           <p className="text-white/60 text-sm">
             &copy; {new Date().getFullYear()} Eurofins Polska. Wszelkie prawa zastrzeżone.
           </p>
-          <p className="text-white/60 text-sm mt-2 sm:mt-0">Projekt i realizacja: Eurofins Digital Solutions</p>
         </div>
       </div>
     </footer>

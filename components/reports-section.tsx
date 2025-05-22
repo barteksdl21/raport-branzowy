@@ -12,61 +12,61 @@ const reports = [
   {
     id: 1,
     title: "Raport branży mięsnej",
+    slug: "raport-branzy-miesnej",
     description:
       "Kompleksowa analiza rynku mięsnego w Polsce. Badania mikrobiologiczne, fizykochemiczne oraz trendy konsumenckie.",
     image: "/placeholder.svg?height=200&width=300",
-    category: "Mięso",
+    comingSoon: false,
   },
   {
     id: 2,
     title: "Raport branży mleczarskiej",
+    slug: "raport-branzy-mleczarskiej",
     description:
       "Szczegółowe badania produktów mlecznych. Analiza jakości, bezpieczeństwa i innowacji w sektorze mleczarskim.",
     image: "/placeholder.svg?height=200&width=300",
-    category: "Mleko",
+    comingSoon: true,
   },
   {
     id: 3,
     title: "Raport branży owocowo-warzywnej",
+    slug: "raport-branzy-owocowo-warzywnej",
     description: "Badania pozostałości pestycydów, metali ciężkich oraz jakości mikrobiologicznej owoców i warzyw.",
     image: "/placeholder.svg?height=200&width=300",
-    category: "Owoce i warzywa",
+    comingSoon: true,
   },
   {
     id: 4,
     title: "Raport branży rybnej",
+    slug: "raport-branzy-rybnej",
     description:
       "Analiza jakości i bezpieczeństwa produktów rybnych. Badania na obecność metali ciężkich i mikroplastiku.",
     image: "/placeholder.svg?height=200&width=300",
-    category: "Ryby i owoce morza",
+    comingSoon: true,
   },
   {
     id: 5,
     title: "Raport branży zbożowej",
+    slug: "raport-branzy-zbozowej",
     description: "Kompleksowe badania zbóż, mąk i produktów zbożowych. Analiza mykotoksyn i jakości wypieków.",
     image: "/placeholder.svg?height=200&width=300",
-    category: "Zboża",
+    comingSoon: true,
   },
   {
     id: 6,
     title: "Raport branży napojów",
+    slug: "raport-branzy-napojow",
     description: "Badania napojów alkoholowych i bezalkoholowych. Analiza składu, dodatków i zgodności z normami.",
     image: "/placeholder.svg?height=200&width=300",
-    category: "Napoje",
+    comingSoon: true,
   },
 ]
 
 export function ReportsSection() {
-  const [activeCategory, setActiveCategory] = useState("Wszystkie")
   const { ref, inView } = useInView({
     triggerOnce: true,
     threshold: 0.1,
   })
-
-  const categories = ["Wszystkie", ...new Set(reports.map((report) => report.category))]
-
-  const filteredReports =
-    activeCategory === "Wszystkie" ? reports : reports.filter((report) => report.category === activeCategory)
 
   return (
     <section ref={ref} id="raporty" className="w-full py-12 md:py-24 bg-white">
@@ -82,25 +82,10 @@ export function ReportsSection() {
           </div>
         </div>
 
-        <div className="flex flex-wrap justify-center gap-2 mt-8 mb-10">
-          {categories.map((category) => (
-            <Button
-              key={category}
-              variant={activeCategory === category ? "default" : "outline"}
-              className={`${
-                activeCategory === category
-                  ? "bg-eurofins-orange hover:bg-eurofins-orange/90 text-white"
-                  : "text-primary"
-              }`}
-              onClick={() => setActiveCategory(category)}
-            >
-              {category}
-            </Button>
-          ))}
-        </div>
+
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-8">
-          {filteredReports.map((report, index) => (
+          {reports.map((report, index) => (
             <Card
               key={report.id}
               className={`report-card overflow-hidden ${inView ? "animate-slide-up" : "opacity-0"}`}
@@ -108,31 +93,26 @@ export function ReportsSection() {
             >
               <div className="relative h-48 w-full">
                 <Image src={report.image || "/placeholder.svg"} alt={report.title} fill className="object-cover" />
-                <div className="absolute top-2 right-2 bg-eurofins-orange text-white px-3 py-1 rounded-full text-sm">
-                  {report.category}
-                </div>
+                {report.comingSoon && (
+                  <div className="absolute top-2 right-2 bg-gray-400 text-white px-3 py-1 rounded-full text-sm">
+                    Dostępne wkrótce
+                  </div>
+                )}
               </div>
               <CardHeader>
                 <CardTitle className="text-xl text-primary">{report.title}</CardTitle>
                 <CardDescription>{report.description}</CardDescription>
               </CardHeader>
               <CardFooter>
-                <Button asChild className="w-full bg-primary hover:bg-primary/90">
-                  <Link href="/#formularz">
-                    <FileText className="mr-2 h-4 w-4" /> Pobierz raport
+                <Button asChild className="w-full bg-primary hover:bg-primary/90" disabled={report.comingSoon}>
+                  <Link href={report.comingSoon ? '#' : `/raporty/${report.slug}`}>
+                    <FileText className="mr-2 h-4 w-4" />
+                    {report.comingSoon ? "Dostępne wkrótce" : "Zobacz szczegóły"}
                   </Link>
                 </Button>
               </CardFooter>
             </Card>
           ))}
-        </div>
-
-        <div className="flex justify-center mt-10">
-          <Button asChild className="bg-eurofins-orange hover:bg-eurofins-orange/90 text-white">
-            <Link href="/#formularz">
-              Pobierz pełne raporty <ArrowRight className="ml-2 h-4 w-4" />
-            </Link>
-          </Button>
         </div>
       </div>
     </section>

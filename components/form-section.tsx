@@ -11,13 +11,17 @@ import { Checkbox } from "@/components/ui/checkbox"
 import { useInView } from "react-intersection-observer"
 import { CheckCircle2 } from "lucide-react"
 
-export function FormSection() {
+interface FormSectionProps {
+  defaultReport?: string;
+}
+
+export function FormSection({ defaultReport = "" }: FormSectionProps) {
   const [formState, setFormState] = useState({
     firstName: "",
     lastName: "",
     email: "",
     company: "",
-    report: "",
+    report: defaultReport,
     consent: false,
     marketing: false,
   })

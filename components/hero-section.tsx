@@ -22,7 +22,7 @@ export function HeroSection() {
             style={{ animationDelay: "0.2s" }}
           >
             <div className="inline-block rounded-lg bg-eurofins-orange px-3 py-1 text-sm text-white">
-              Raporty Branżowe 2025 test
+              Raporty Branżowe 2025
             </div>
             <h1 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl lg:text-6xl text-white">
               Profesjonalne analizy dla przemysłu spożywczego
@@ -55,8 +55,8 @@ export function HeroSection() {
                 priority
               />
             </div>
-            <div className="absolute -bottom-4 -left-4 h-24 w-24 rounded-full bg-eurofins-orange flex items-center justify-center text-white font-bold text-lg p-4 shadow-lg">
-              10+ branż
+            <div className="absolute -bottom-4 -left-4 h-24 w-24 rounded-full bg-eurofins-orange flex items-center justify-center text-center text-white font-bold text-lg p-0 m-0 leading-none shadow-lg">
+              <span>10+<br />branż</span>
             </div>
           </div>
         </div>

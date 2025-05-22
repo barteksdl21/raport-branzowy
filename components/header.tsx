@@ -32,7 +32,7 @@ export default function Header() {
             alt="Eurofins Polska Logo"
             width={228}
             height={77}
-            className="h-10 w-auto"
+            className="w-auto"
           />
         </Link>
 
