@@ -28,10 +28,10 @@ export default function Header() {
       <div className="container flex items-center justify-between">
         <Link href="/" className="flex items-center space-x-2">
           <Image
-            src="/placeholder.svg?height=40&width=150"
+            src="/logo.png"
             alt="Eurofins Polska Logo"
-            width={150}
-            height={40}
+            width={228}
+            height={77}
             className="h-10 w-auto"
           />
         </Link>

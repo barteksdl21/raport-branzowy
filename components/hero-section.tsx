@@ -22,7 +22,7 @@ export function HeroSection() {
             style={{ animationDelay: "0.2s" }}
           >
             <div className="inline-block rounded-lg bg-eurofins-orange px-3 py-1 text-sm text-white">
-              Raporty Branżowe 2025
+              Raporty Branżowe 2025 test
             </div>
             <h1 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl lg:text-6xl text-white">
               Profesjonalne analizy dla przemysłu spożywczego
