@@ -11,19 +11,19 @@ import { useInView } from "react-intersection-observer"
 const reports = [
   {
     id: 1,
-    title: "Raport branży mięsnej",
-    slug: "raport-branzy-miesnej",
+    title: "Raport branży mleczarskiej",
+    slug: "raport-branzy-mleczarskiej",
     description:
-      "Kompleksowa analiza rynku mięsnego w Polsce. Badania mikrobiologiczne, fizykochemiczne oraz trendy konsumenckie.",
+      "Szczegółowe badania produktów mlecznych. Analiza jakości, bezpieczeństwa i innowacji w sektorze mleczarskim.",
     image: "/placeholder.svg?height=200&width=300",
     comingSoon: false,
   },
   {
     id: 2,
-    title: "Raport branży mleczarskiej",
-    slug: "raport-branzy-mleczarskiej",
+    title: "Raport branży mięsnej",
+    slug: "raport-branzy-miesnej",
     description:
-      "Szczegółowe badania produktów mlecznych. Analiza jakości, bezpieczeństwa i innowacji w sektorze mleczarskim.",
+      "Kompleksowa analiza rynku mięsnego w Polsce. Badania mikrobiologiczne, fizykochemiczne oraz trendy konsumenckie.",
     image: "/placeholder.svg?height=200&width=300",
     comingSoon: true,
   },
@@ -41,22 +41,6 @@ const reports = [
     slug: "raport-branzy-rybnej",
     description:
       "Analiza jakości i bezpieczeństwa produktów rybnych. Badania na obecność metali ciężkich i mikroplastiku.",
-    image: "/placeholder.svg?height=200&width=300",
-    comingSoon: true,
-  },
-  {
-    id: 5,
-    title: "Raport branży zbożowej",
-    slug: "raport-branzy-zbozowej",
-    description: "Kompleksowe badania zbóż, mąk i produktów zbożowych. Analiza mykotoksyn i jakości wypieków.",
-    image: "/placeholder.svg?height=200&width=300",
-    comingSoon: true,
-  },
-  {
-    id: 6,
-    title: "Raport branży napojów",
-    slug: "raport-branzy-napojow",
-    description: "Badania napojów alkoholowych i bezalkoholowych. Analiza składu, dodatków i zgodności z normami.",
     image: "/placeholder.svg?height=200&width=300",
     comingSoon: true,
   },
@@ -84,7 +68,7 @@ export function ReportsSection() {
 
 
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-8">
           {reports.map((report, index) => (
             <Card
               key={report.id}

@@ -166,12 +166,10 @@ export function FormSection({ defaultReport = "" }: FormSectionProps) {
                       <SelectValue placeholder="Wybierz raport" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="meat">Raport branży mięsnej</SelectItem>
                       <SelectItem value="dairy">Raport branży mleczarskiej</SelectItem>
+                      <SelectItem value="meat">Raport branży mięsnej</SelectItem>
                       <SelectItem value="fruits">Raport branży owocowo-warzywnej</SelectItem>
                       <SelectItem value="seafood">Raport branży rybnej</SelectItem>
-                      <SelectItem value="grain">Raport branży zbożowej</SelectItem>
-                      <SelectItem value="beverages">Raport branży napojów</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>

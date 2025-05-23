@@ -7,7 +7,7 @@ const faqs = [
   {
     question: "Jak mogę uzyskać dostęp do raportów branżowych?",
     answer:
-      "Aby uzyskać dostęp do raportów branżowych Eurofins Polska, wystarczy wypełnić formularz na naszej stronie, podając swoje dane kontaktowe. Po weryfikacji, raport zostanie wysłany na podany adres e-mail.",
+      "Aby uzyskać dostęp do raportów branżowych Eurofins Polska, wystarczy wypełnić formularz na naszej stronie, podając swoje dane kontaktowe. Raport zostanie wysłany na podany adres e-mail.",
   },
   {
     question: "Czy raporty są dostępne bezpłatnie?",
@@ -25,14 +25,9 @@ const faqs = [
       "Nasze raporty zawierają kompleksowe analizy laboratoryjne produktów z danej branży, trendy rynkowe, porównania z normami europejskimi, informacje o zagrożeniach i zanieczyszczeniach oraz rekomendacje dla producentów.",
   },
   {
-    question: "Czy mogę zamówić raport spersonalizowany dla mojej firmy?",
-    answer:
-      "Tak, oferujemy również możliwość przygotowania spersonalizowanych raportów, uwzględniających specyfikę Państwa produktów i procesów. W tej sprawie prosimy o bezpośredni kontakt z naszym działem obsługi klienta.",
-  },
-  {
     question: "W jakim formacie otrzymam raport?",
     answer:
-      "Raporty dostarczamy w formacie PDF, który można łatwo przeglądać na komputerze, tablecie lub smartfonie. Na życzenie możemy również przygotować wersję drukowaną.",
+      "Raporty dostarczamy w formacie PDF, który można łatwo przeglądać na komputerze, tablecie lub smartfonie.",
   },
 ]
 
@@ -79,7 +74,7 @@ export function FaqSection() {
           style={{ animationDelay: "0.4s" }}
         >
           <p className="text-muted-foreground">Nie znalazłeś odpowiedzi na swoje pytanie? Skontaktuj się z nami:</p>
-          <p className="font-medium text-primary mt-2">info@eurofins.pl | +48 22 123 45 67</p>
+          <p className="font-medium text-primary mt-2"><a href="mailto:wyceny-oferta@eurofins.com">wyceny-oferta@eurofins.com</a> | +48 55 272 04 73</p>
         </div>
       </div>
     </section>

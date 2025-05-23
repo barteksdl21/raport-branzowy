@@ -29,7 +29,7 @@ export function HeroSection() {
             </h1>
             <p className="max-w-[600px] text-white/90 md:text-xl">
               Uzyskaj dostęp do najnowszych raportów branżowych Eurofins Polska. Kompleksowe analizy laboratoryjne dla
-              sektorów: mięsnego, mleczarskiego, owocowo-warzywnego i wielu innych.
+              sektorów: mięsnego, mleczarskiego, owocowo-warzywnego i rybnego.
             </p>
             <div className="flex flex-col sm:flex-row gap-4">
               <Button asChild size="lg" className="bg-eurofins-orange hover:bg-eurofins-orange/90 text-white">
@@ -56,7 +56,7 @@ export function HeroSection() {
               />
             </div>
             <div className="absolute -bottom-4 -left-4 h-24 w-24 rounded-full bg-eurofins-orange flex items-center justify-center text-center text-white font-bold text-lg p-0 m-0 leading-none shadow-lg">
-              <span>10+<br />branż</span>
+              <span>4<br />branże</span>
             </div>
           </div>
         </div>

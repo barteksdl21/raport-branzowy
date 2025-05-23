@@ -58,16 +58,6 @@ export default function Footer() {
                   Branża rybna
                 </Link>
               </li>
-              <li>
-                <Link href="/#raporty" className="text-white/80 hover:text-eurofins-orange transition-colors">
-                  Branża zbożowa
-                </Link>
-              </li>
-              <li>
-                <Link href="/#raporty" className="text-white/80 hover:text-eurofins-orange transition-colors">
-                  Branża napojów
-                </Link>
-              </li>
             </ul>
           </div>
 
