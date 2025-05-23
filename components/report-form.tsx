@@ -191,7 +191,7 @@ export function ReportForm({ defaultReport }: ReportFormProps) {
         </Button>
         
         <p className="text-xs text-gray-500">
-          * Pola wymagane. Twoje dane są chronione zgodnie z naszą <a href="#" className="underline">polityką prywatności</a>.
+          * Pola wymagane. Twoje dane są chronione zgodnie z naszą <a href="/polityka-prywatnosci" className="underline">polityką prywatności</a>.
         </p>
       </form>
     </div>

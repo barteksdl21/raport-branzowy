@@ -126,7 +126,7 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
-                <Link href="#" className="text-white/80 hover:text-eurofins-orange transition-colors">
+                <Link href="/polityka-prywatnosci" className="text-white/80 hover:text-eurofins-orange transition-colors">
                   Polityka prywatności
                 </Link>
               </li>

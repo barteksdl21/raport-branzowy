@@ -203,7 +203,7 @@ export function FormSection({ defaultReport = "" }: FormSectionProps) {
 
                 <p className="text-xs text-muted-foreground">
                   * Pola wymagane. Twoje dane są chronione zgodnie z naszą{" "}
-                  <a href="#" className="underline">
+                  <a href="/polityka-prywatnosci" className="underline">
                     polityką prywatności
                   </a>
                   .
