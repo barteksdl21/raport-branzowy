@@ -11,9 +11,11 @@ const inter = Inter({ subsets: ["latin", "latin-ext"] })
 export const metadata: Metadata = {
   title: "Raporty Branżowe | Eurofins Polska",
   description:
-    "Profesjonalne raporty branżowe dla przemysłu spożywczego od Eurofins Polska. Analizy laboratoryjne dla sektorów: mięsnego, mleczarskiego, owocowo-warzywnego i innych.",
+    "Raporty branżowe dla przemysłu spożywczego od Eurofins Polska. Analizy laboratoryjne dla sektorów: mięsnego, mleczarskiego, owocowo-warzywnego i innych.",
   keywords: "raporty branżowe, Eurofins Polska, analizy laboratoryjne, przemysł spożywczy, badania żywności",
-    generator: 'v0.dev'
+  icons: {
+    icon: '/emblem.png',
+  },
 }
 
 export default function RootLayout({

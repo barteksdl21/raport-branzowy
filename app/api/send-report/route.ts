@@ -1,18 +1,189 @@
 import { NextResponse } from 'next/server';
 import { Resend } from 'resend';
+import { createClient } from '@supabase/supabase-js';
 
 // Eurofins brand colors
 const EUROFINS_NAVY = '#003366';
 const EUROFINS_ORANGE = '#FF8000';
 const EUROFINS_WHITE = '#FFFFFF';
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+// Initialize Resend client
+const resendApiKey = process.env.RESEND_API_KEY;
+if (!resendApiKey) {
+  console.error("RESEND_API_KEY is not set in environment variables.");
+  // Consider how to handle this critical missing configuration
+}
+const resend = new Resend(resendApiKey);
+
+// Initialize Supabase client
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+const supabaseServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+
+if (!supabaseUrl || !supabaseServiceRoleKey) {
+  console.error("Supabase URL or Service Role Key is missing from environment variables.");
+  // This will cause runtime errors if Supabase is used.
+}
+
+const supabase = createClient(supabaseUrl!, supabaseServiceRoleKey!);
+
+const ALLOWED_REPORTS = ['meat', 'dairy', 'fruits', 'seafood', 'grain', 'beverages'];
+
+// Placeholder for actual report URLs - replace with your real Vercel Blob URLs
+const REPORT_ATTACHMENT_URLS: Record<string, string> = {
+  meat: 'https://zj2d6vfvf7afuoiu.public.blob.vercel-storage.com/sample.pdf', // Replace with actual URL
+  dairy: 'https://zj2d6vfvf7afuoiu.public.blob.vercel-storage.com/sample.pdf', // Replace with actual URL
+  fruits: 'https://zj2d6vfvf7afuoiu.public.blob.vercel-storage.com/sample.pdf', // Replace with actual URL
+  seafood: 'https://zj2d6vfvf7afuoiu.public.blob.vercel-storage.com/sample.pdf', // Replace with actual URL
+  grain: 'https://zj2d6vfvf7afuoiu.public.blob.vercel-storage.com/sample.pdf', // Replace with actual URL
+  beverages: 'https://zj2d6vfvf7afuoiu.public.blob.vercel-storage.com/sample.pdf', // Replace with actual URL
+};
 
 export async function POST(request: Request) {
-  try {
-    const { firstName, lastName, email, company, report } = await request.json();
+  // Environment variable checks
+  if (!process.env.RESEND_API_KEY) {
+    console.error("RESEND_API_KEY is not set.");
+    return NextResponse.json({ error: 'Service configuration error.' }, { status: 503 });
+  }
+  if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.SUPABASE_SERVICE_ROLE_KEY) {
+    console.error("Supabase configuration is missing.");
+    return NextResponse.json({ error: 'Service configuration error.' }, { status: 503 });
+  }
+  if (!process.env.BLOB_READ_WRITE_TOKEN) {
+    console.error("BLOB_READ_WRITE_TOKEN is not set.");
+    return NextResponse.json({ error: 'Service configuration error.' }, { status: 503 });
+  }
 
-    // Map report types to their display names
+  try {
+    let rawBody;
+    try {
+      rawBody = await request.json();
+    } catch (jsonError: any) {
+      console.error('Failed to parse JSON body:', jsonError);
+      return NextResponse.json({ error: 'Invalid request body: Malformed JSON.' }, { status: 400 });
+    }
+
+    const {
+      firstName: rawFirstName,
+      lastName: rawLastName,
+      email: rawEmail,
+      company: rawCompany,
+      report: rawReport,
+      consent,
+      marketing
+    } = rawBody;
+
+    // Trim string inputs
+    const firstName = typeof rawFirstName === 'string' ? rawFirstName.trim() : '';
+    const lastName = typeof rawLastName === 'string' ? rawLastName.trim() : '';
+    const email = typeof rawEmail === 'string' ? rawEmail.trim() : '';
+    const company = typeof rawCompany === 'string' ? rawCompany.trim() : '';
+    const report = typeof rawReport === 'string' ? rawReport.trim() : '';
+
+    // Validate required fields
+    if (!firstName || !lastName || !email || !company || !report || typeof consent !== 'boolean') {
+      return NextResponse.json({ error: 'Missing required fields. Please fill out all mandatory parts of the form.' }, { status: 400 });
+    }
+
+    // Validate report type against allowlist
+    if (!ALLOWED_REPORTS.includes(report)) {
+      return NextResponse.json({ error: 'Invalid report type specified.' }, { status: 400 });
+    }
+
+    // Consent for data processing to receive the report is mandatory as per form logic
+    if (!consent) {
+        return NextResponse.json({ error: 'Processing consent is required to receive the report.' }, { status: 400 });
+    }
+
+    // --- Database Operations ---
+    let leadId: string;
+    let showUnsubscribeInfo: boolean = false; // Initialize in broader scope
+    try {
+      // 1. Upsert Lead (create if new email, update if existing)
+      const { data: leadData, error: leadError } = await supabase
+        .from('leads')
+        .upsert(
+          {
+            email: email.toLowerCase(), // Normalize email
+            first_name: firstName, // Already trimmed
+            last_name: lastName,   // Already trimmed
+            company: company,       // Already trimmed
+          },
+          {
+            onConflict: 'email',
+          }
+        )
+        .select('id')
+        .single();
+
+      if (leadError) throw leadError;
+      if (!leadData) throw new Error('Failed to create or find lead.');
+      leadId = leadData.id;
+
+      // 2. Insert Report Download
+      const { error: reportDownloadError } = await supabase
+        .from('report_downloads')
+        .insert({
+          lead_id: leadId,
+          report_type: report,
+          processing_consent: consent, // Should be true based on prior check
+        });
+      if (reportDownloadError) throw reportDownloadError;
+
+      // 3. Upsert Newsletter Subscription
+      const { data: existingSubscription, error: fetchSubError } = await supabase
+        .from('newsletter_subscriptions')
+        .select('id, is_subscribed, subscribed_at, unsubscribed_at')
+        .eq('lead_id', leadId)
+        .maybeSingle();
+
+      if (fetchSubError) throw fetchSubError;
+
+      // Determine if unsubscribe info should be shown in the email
+      // Show if they are opting in now OR if they were already subscribed
+      showUnsubscribeInfo = !!marketing || (existingSubscription && existingSubscription.is_subscribed);
+
+      const now = new Date().toISOString();
+      let subscriptionDataToUpsert: any = {
+        lead_id: leadId,
+        is_subscribed: !!marketing, // Ensure boolean
+      };
+
+      if (marketing) { // User wants to be subscribed
+        if (!existingSubscription || !existingSubscription.is_subscribed) {
+          subscriptionDataToUpsert.subscribed_at = now;
+        } else {
+          subscriptionDataToUpsert.subscribed_at = existingSubscription.subscribed_at;
+        }
+        subscriptionDataToUpsert.unsubscribed_at = null;
+      } else { // User does not want to be subscribed
+        if (existingSubscription && existingSubscription.is_subscribed) {
+          subscriptionDataToUpsert.unsubscribed_at = now;
+        } else if (existingSubscription) {
+          subscriptionDataToUpsert.unsubscribed_at = existingSubscription.unsubscribed_at;
+        }
+        if (existingSubscription) {
+            subscriptionDataToUpsert.subscribed_at = existingSubscription.subscribed_at;
+        }
+      }
+      
+      const { error: newsletterSubscriptionError } = await supabase
+        .from('newsletter_subscriptions')
+        .upsert(subscriptionDataToUpsert, { onConflict: 'lead_id' });
+        
+      if (newsletterSubscriptionError) throw newsletterSubscriptionError;
+
+    } catch (dbError: any) {
+      console.error('Database operation failed:', dbError);
+      // Potentially send a different email or notification if DB fails but user still expects report?
+      // For now, we fail the request before sending the email.
+      return NextResponse.json(
+        { error: 'Failed to save your submission. Please try again later.' }, // Generic message for client
+        { status: 500 }
+      );
+    }
+    // --- End Database Operations ---
+
+    // Map report types to their display names for the email
     const reportNames: Record<string, string> = {
       meat: 'Raport branży mięsnej',
       dairy: 'Raport branży mleczarskiej',
@@ -21,11 +192,14 @@ export async function POST(request: Request) {
       grain: 'Raport branży zbożowej',
       beverages: 'Raport branży napojów',
     };
-
     const reportName = reportNames[report] || 'Raport branżowy';
 
-    // Fetch attachment from Vercel Blob
-    const attachmentUrl = 'https://zj2d6vfvf7afuoiu.public.blob.vercel-storage.com/sample.pdf';
+    // Fetch attachment from Vercel Blob based on validated report type
+    const attachmentUrl = REPORT_ATTACHMENT_URLS[report];
+    if (!attachmentUrl) {
+      console.error(`Configuration error: No attachment URL found for report type '${report}'.`);
+      return NextResponse.json({ error: 'Failed to prepare report due to a server configuration issue.' }, { status: 500 });
+    }
     let contentBuffer;
     try {
       const blobResponse = await fetch(attachmentUrl, {
@@ -41,16 +215,16 @@ export async function POST(request: Request) {
       }
       const arrayBuffer = await blobResponse.arrayBuffer();
       contentBuffer = Buffer.from(arrayBuffer);
-    } catch (fetchError) {
+    } catch (fetchError: any) {
       console.error('Error preparing attachment:', fetchError);
       return NextResponse.json(
-        { error: 'Failed to prepare attachment for email' },
+        { error: 'Failed to prepare report for email. Please try again.' }, // Generic message for client
         { status: 500 }
       );
     }
 
-    // Create plaintext version of the email for better deliverability
-    const plainText = `
+    // Create plaintext version of the email
+    let plainText = `
 Dziękujemy za zainteresowanie naszym raportem!
 
 Witaj ${firstName} ${lastName},
@@ -66,9 +240,15 @@ Zespół Eurofins Polska
 
 ---
 Ta wiadomość została wysłana na adres ${email}. Jeśli to nie Ty wysłałeś(aś) to zgłoszenie, prosimy zignorować tę wiadomość.
+`;
 
-Aby wypisać się z newslettera, wyślij email na adres: unsubscribe@raportbranzowy.pl
+    if (showUnsubscribeInfo) {
+      plainText += `
+Aby wypisać się z newslettera, odwiedź https://raportbranzowy.pl/unsubscribe?email=${encodeURIComponent(email)} lub odpowiedz na tę wiadomość wpisując "unsubscribe".
+`;
+    }
 
+    plainText += `
 ---
 Eurofins Polska Sp. z o.o.
 Aleja Wojska Polskiego 90A
@@ -76,21 +256,24 @@ Aleja Wojska Polskiego 90A
 NIP: 5792000046
 `;
 
-    // Email headers to improve deliverability
-    const emailHeaders = {
-      'List-Unsubscribe': `<mailto:unsubscribe@raportbranzowy.pl?subject=unsubscribe&email=${email}>`,
-      'X-Entity-Ref-ID': `report-${report}-${Date.now()}`, // Unique ID for each email
+    // Email headers
+    const emailHeaders: Record<string, string> = {
+      'X-Entity-Ref-ID': `report-${report}-${Date.now()}`,
       'X-Report-Type': report,
-      'X-Report-Abuse': 'Please forward this email to abuse@raportbranzowy.pl',
+      'X-Report-Abuse': 'abuse@raportbranzowy.pl',
     };
+
+    if (showUnsubscribeInfo) {
+      emailHeaders['List-Unsubscribe'] = `<https://raportbranzowy.pl/unsubscribe?email=${encodeURIComponent(email)}>, <mailto:unsubscribe@raportbranzowy.pl?subject=unsubscribe&body=Proszę%20o%20wypisanie%20mnie%20z%20newslettera%20dla%20adresu%20${encodeURIComponent(email)}>`;
+    }
     
     // Send email with Resend
-    const { data, error } = await resend.emails.send({
+    const { data: resendData, error: resendError } = await resend.emails.send({
       from: 'Eurofins Polska <raporty@raportbranzowy.pl>',
       to: email,
-      subject: `Twój raport: ${reportName} - Eurofins Polska`,
+      subject: `${reportName} - Eurofins Polska`,
       headers: emailHeaders,
-      replyTo: 'kontakt@raportbranzowy.pl',
+      replyTo: 'wyceny-oferta@eurofins.com',
       html: `
         <!DOCTYPE html>
         <html lang="pl">
@@ -158,9 +341,11 @@ NIP: 5792000046
                   Jeśli to nie Ty wysłałeś(aś) to zgłoszenie, prosimy zignorować tę wiadomość.
                 </p>
                 
+                ${showUnsubscribeInfo ? `
                 <p style="color: #777; font-size: 12px; margin-bottom: 15px;">
-                  <a href="raportbranzowy.pl/unsubscribe?email=${email}" style="color: ${EUROFINS_NAVY}; text-decoration: underline;">Wypisz się z newslettera</a>
+                  <a href="https://raportbranzowy.pl/unsubscribe?email=${encodeURIComponent(email)}" style="color: ${EUROFINS_NAVY}; text-decoration: underline;">Wypisz się z newslettera</a>
                 </p>
+                ` : ''}
                 
                 <div style="border-top: 1px solid #ddd; padding-top: 15px; margin-top: 15px;">
                   <p style="color: #777; font-size: 11px; margin: 0; line-height: 1.4;">
@@ -190,19 +375,23 @@ NIP: 5792000046
       ] : [],
     });
 
-    if (error) {
-      console.error('Error sending email:', error);
+    if (resendError) {
+      console.error('Error sending email:', resendError);
+      // Note: DB operations were successful, but email failed.
+      // Consider how to handle this state. For now, return email error.
       return NextResponse.json(
-        { error: 'Failed to send email' },
+        { error: 'Failed to send email. Your submission was recorded. Please contact support if you do not receive your report.' }, // Generic message for client
         { status: 500 }
       );
     }
 
-    return NextResponse.json({ success: true, data });
-  } catch (error) {
-    console.error('Error in send-report API:', error);
+    return NextResponse.json({ success: true, message: 'Report sent and submission recorded.', data: resendData });
+
+  } catch (error: any) {
+    console.error('Error in send-report API (outer):', error);
+    // The SyntaxError for JSON parsing is handled when getting rawBody
     return NextResponse.json(
-      { error: 'Internal server error' },
+      { error: 'An unexpected internal server error occurred. Please try again later.' }, // Generic message for client
       { status: 500 }
     );
   }

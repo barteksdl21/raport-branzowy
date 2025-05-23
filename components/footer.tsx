@@ -10,11 +10,11 @@ export default function Footer() {
           <div className="space-y-4">
             <Link href="/" className="flex items-center space-x-2">
               <Image
-                src="/placeholder.svg?height=40&width=150"
+                src="/emblem.png"
                 alt="Eurofins Polska Logo"
                 width={150}
                 height={40}
-                className="h-10 w-auto brightness-0 invert"
+                className="h-10 w-auto"
               />
             </Link>
             <p className="text-white/80 text-sm">
@@ -22,38 +22,16 @@ export default function Footer() {
               laboratoryjnych dla przemysłu spożywczego.
             </p>
             <div className="flex space-x-4">
+
               <Link
-                href="https://facebook.com"
-                target="_blank"
-                className="text-white/80 hover:text-eurofins-orange transition-colors"
-              >
-                <Facebook className="h-5 w-5" />
-                <span className="sr-only">Facebook</span>
-              </Link>
-              <Link
-                href="https://twitter.com"
-                target="_blank"
-                className="text-white/80 hover:text-eurofins-orange transition-colors"
-              >
-                <Twitter className="h-5 w-5" />
-                <span className="sr-only">Twitter</span>
-              </Link>
-              <Link
-                href="https://linkedin.com"
+                href="https://www.linkedin.com/company/eurofins-w-polsce/posts/?feedView=all"
                 target="_blank"
                 className="text-white/80 hover:text-eurofins-orange transition-colors"
               >
                 <Linkedin className="h-5 w-5" />
                 <span className="sr-only">LinkedIn</span>
               </Link>
-              <Link
-                href="https://instagram.com"
-                target="_blank"
-                className="text-white/80 hover:text-eurofins-orange transition-colors"
-              >
-                <Instagram className="h-5 w-5" />
-                <span className="sr-only">Instagram</span>
-              </Link>
+
             </div>
           </div>
 
@@ -139,18 +117,22 @@ export default function Footer() {
               <li className="flex items-start space-x-2">
                 <MapPin className="h-5 w-5 text-eurofins-orange shrink-0 mt-0.5" />
                 <span className="text-white/80">
-                  ul. Przykładowa 123
+                <strong>Eurofins Polska sp. z o.o.</strong>
+                <br />
+                Aleja Wojska Polskiego 90A
                   <br />
-                  00-000 Warszawa
+                  82-200 Malbork
+                  <br />
+                  NIP: 5792000046
                 </span>
               </li>
               <li className="flex items-center space-x-2">
                 <Phone className="h-5 w-5 text-eurofins-orange shrink-0" />
-                <span className="text-white/80">+48 22 123 45 67</span>
+                <span className="text-white/80">+48 55 272 04 73</span>
               </li>
               <li className="flex items-center space-x-2">
                 <Mail className="h-5 w-5 text-eurofins-orange shrink-0" />
-                <span className="text-white/80">info@eurofins.pl</span>
+                <span className="text-white/80"><a href="mailto:wyceny-oferta@eurofins.com">wyceny-oferta@eurofins.com</a></span>
               </li>
             </ul>
           </div>
@@ -158,7 +140,7 @@ export default function Footer() {
 
         <div className="mt-10 pt-6 border-t border-white/20 flex flex-col sm:flex-row justify-between items-center">
           <p className="text-white/60 text-sm">
-            &copy; {new Date().getFullYear()} Eurofins Polska. Wszelkie prawa zastrzeżone.
+            &copy; {new Date().getFullYear()} Eurofins Polska Sp. z o.o. Wszelkie prawa zastrzeżone.
           </p>
         </div>
       </div>

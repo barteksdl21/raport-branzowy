@@ -3,14 +3,38 @@ import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import { FileText, ArrowLeft } from "lucide-react"
 import Link from "next/link"
-import { ReportForm } from "@/components/report-form"
+import { FormSection } from "@/components/form-section"
+import type { Metadata } from 'next';
 
 // This would typically come from a database or API
+
+export async function generateMetadata(
+  { params }: { params: { slug: string } }
+): Promise<Metadata> {
+  const slug = params.slug;
+  const report = reports.find((r) => r.slug === slug);
+
+  if (!report) {
+    // Optionally, return default metadata or handle as needed
+    // For now, relying on the page's notFound() for the page itself
+    return {
+      title: "Raport nie znaleziony",
+      description: "Szukany raport nie został odnaleziony.",
+    };
+  }
+
+  return {
+    title: report.title + " | Raporty Branżowe Eurofins Polska", // Appending site name for consistency
+    description: report.description,
+  };
+}
+
 const reports = [
   {
     id: 1,
     title: "Raport branży mięsnej",
     slug: "raport-branzy-miesnej",
+    formValue: "meat",
     description:
       "Kompleksowa analiza rynku mięsnego w Polsce. Badania mikrobiologiczne, fizykochemiczne oraz trendy konsumenckie.",
     longDescription:
@@ -30,6 +54,7 @@ const reports = [
     id: 2,
     title: "Raport branży mleczarskiej",
     slug: "raport-branzy-mleczarskiej",
+    formValue: "dairy",
     description:
       "Kompleksowa analiza rynku mleczarskiego w Polsce. Badania mikrobiologiczne, fizykochemiczne oraz trendy konsumenckie.",
     longDescription:
@@ -58,20 +83,9 @@ export default async function ReportDetailPage({ params }: { params: { slug: str
 
   return (
     <div className="min-h-screen">
-      {/* Navigation */}
-      <div className="bg-white py-4 shadow-sm">
-        <div className="container mx-auto px-4">
-          <Button asChild variant="ghost">
-            <Link href="/#raporty" className="flex items-center">
-              <ArrowLeft className="mr-2 h-4 w-4" />
-              Wróć do listy raportów
-            </Link>
-          </Button>
-        </div>
-      </div>
       
       {/* Main content area for report details */}
-      <section className="py-16 bg-white">
+      <section className="pt-2 pb-16 bg-white">
         <div className="container mx-auto px-4">
           {/* Report header with image */}
           <div className="relative h-80 w-full rounded-xl overflow-hidden mb-12">
@@ -145,46 +159,7 @@ export default async function ReportDetailPage({ params }: { params: { slug: str
 
   
       {/* Form section - full width distinct section */}
-      <section className="w-full bg-gray-100 py-16" id="formularz">
-        <div className="container mx-auto px-4">
-          <div className="grid md:grid-cols-2 gap-16 items-center">
-            <div>
-              <h1 className="text-3xl font-bold mb-6 text-gray-900">Pobierz raport branżowy</h1>
-              <p className="text-lg mb-8 text-gray-700">
-                Wypełnij formularz, aby otrzymać wybrany raport branżowy na swój adres e-mail. 
-                Nasze raporty zawierają cenne informacje, które pomogą Ci podejmować lepsze decyzje biznesowe.
-              </p>
-              
-              <div className="space-y-4">
-                <div className="flex items-center">
-                  <div className="h-6 w-6 rounded-full bg-eurofins-orange flex items-center justify-center text-white text-sm font-medium mr-3">1</div>
-                  <span className="text-gray-700">Szczegółowe analizy laboratoryjne</span>
-                </div>
-                <div className="flex items-center">
-                  <div className="h-6 w-6 rounded-full bg-eurofins-orange flex items-center justify-center text-white text-sm font-medium mr-3">2</div>
-                  <span className="text-gray-700">Trendy rynkowe i konsumenckie</span>
-                </div>
-                <div className="flex items-center">
-                  <div className="h-6 w-6 rounded-full bg-eurofins-orange flex items-center justify-center text-white text-sm font-medium mr-3">3</div>
-                  <span className="text-gray-700">Porównanie z normami europejskimi</span>
-                </div>
-                <div className="flex items-center">
-                  <div className="h-6 w-6 rounded-full bg-eurofins-orange flex items-center justify-center text-white text-sm font-medium mr-3">4</div>
-                  <span className="text-gray-700">Rekomendacje dla producentów</span>
-                </div>
-                <div className="flex items-center">
-                  <div className="h-6 w-6 rounded-full bg-eurofins-orange flex items-center justify-center text-white text-sm font-medium mr-3">5</div>
-                  <span className="text-gray-700">Dostęp do ekspertów Eurofins</span>
-                </div>
-              </div>
-            </div>
-            
-            <div className="bg-white p-8 rounded-lg shadow-md">
-              <ReportForm defaultReport={report.title} />
-            </div>
-          </div>
-        </div>
-      </section>
+      <FormSection defaultReport={report.formValue} />
     </div>
   )
 }

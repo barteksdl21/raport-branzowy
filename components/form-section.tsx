@@ -28,6 +28,7 @@ export function FormSection({ defaultReport = "" }: FormSectionProps) {
 
   const [isSubmitted, setIsSubmitted] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [submitError, setSubmitError] = useState<string | null>(null)
 
   const { ref, inView } = useInView({
     triggerOnce: true,
@@ -50,6 +51,7 @@ export function FormSection({ defaultReport = "" }: FormSectionProps) {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsSubmitting(true)
+    setSubmitError(null) // Clear previous errors
 
     try {
       const response = await fetch('/api/send-report', {
@@ -63,6 +65,8 @@ export function FormSection({ defaultReport = "" }: FormSectionProps) {
           email: formState.email,
           company: formState.company,
           report: formState.report,
+          consent: formState.consent, // Added consent field
+          marketing: formState.marketing, // Added marketing field
         }),
       });
       
@@ -74,7 +78,11 @@ export function FormSection({ defaultReport = "" }: FormSectionProps) {
       setIsSubmitted(true);
     } catch (error) {
       console.error('Error submitting form:', error);
-      alert('Wystąpił błąd podczas wysyłania formularza. Spróbuj ponownie później.');
+      if (error instanceof Error) {
+        setSubmitError(error.message || 'Wystąpił błąd podczas wysyłania formularza. Spróbuj ponownie później.');
+      } else {
+        setSubmitError('Wystąpił nieoczekiwany błąd. Spróbuj ponownie później.');
+      }
     } finally {
       setIsSubmitting(false);
     }
@@ -153,7 +161,7 @@ export function FormSection({ defaultReport = "" }: FormSectionProps) {
 
                 <div className="space-y-2">
                   <Label htmlFor="report">Wybierz raport *</Label>
-                  <Select onValueChange={handleSelectChange} required>
+                  <Select value={formState.report} onValueChange={handleSelectChange} required>
                     <SelectTrigger>
                       <SelectValue placeholder="Wybierz raport" />
                     </SelectTrigger>
@@ -192,6 +200,12 @@ export function FormSection({ defaultReport = "" }: FormSectionProps) {
                     </Label>
                   </div>
                 </div>
+
+                {submitError && (
+                  <div className="my-2 p-3 bg-red-100 border border-red-400 text-red-700 rounded-md">
+                    <p>{submitError}</p>
+                  </div>
+                )}
 
                 <Button
                   type="submit"
