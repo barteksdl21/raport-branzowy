@@ -5,6 +5,7 @@ import "./globals.css"
 import { ThemeProvider } from "@/components/theme-provider"
 import Header from "@/components/header"
 import Footer from "@/components/footer"
+import { GoogleAnalytics } from "../lib/gtag"
 
 const inter = Inter({ subsets: ["latin", "latin-ext"] })
 
@@ -38,6 +39,7 @@ export default function RootLayout({
             <Footer />
           </div>
         </ThemeProvider>
+        <GoogleAnalytics />
       </body>
     </html>
   )
