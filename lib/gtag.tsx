@@ -2,7 +2,7 @@
 
 import { usePathname, useSearchParams } from 'next/navigation'
 import Script from 'next/script'
-import { useEffect } from 'react'
+import { useEffect, Suspense } from 'react' // Import Suspense
 
 export const GA_TRACKING_ID = process.env.NEXT_PUBLIC_GA_ID
 
@@ -32,7 +32,8 @@ export const event = ({ action, category, label, value }: EventProps) => {
   }
 }
 
-export const GoogleAnalytics = () => {
+// New component to handle navigation events and hooks
+const AnalyticsNavigationEvents = () => {
   const pathname = usePathname()
   const searchParams = useSearchParams()
 
@@ -46,6 +47,10 @@ export const GoogleAnalytics = () => {
     }
   }, [pathname, searchParams])
 
+  return null // This component does not render any UI itself
+}
+
+export const GoogleAnalytics = () => {
   if (!GA_TRACKING_ID) {
     return null
   }
@@ -70,6 +75,10 @@ export const GoogleAnalytics = () => {
           `,
         }}
       />
+      {/* Wrap the component using hooks in Suspense */}
+      <Suspense fallback={null}>
+        <AnalyticsNavigationEvents />
+      </Suspense>
     </>
   )
 }
