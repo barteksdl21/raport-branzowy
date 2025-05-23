@@ -1,6 +1,11 @@
 import { NextResponse } from 'next/server';
 import { Resend } from 'resend';
 
+// Eurofins brand colors
+const EUROFINS_NAVY = '#003366';
+const EUROFINS_ORANGE = '#FF8000';
+const EUROFINS_WHITE = '#FFFFFF';
+
 const resend = new Resend(process.env.RESEND_API_KEY);
 
 export async function POST(request: Request) {
@@ -44,24 +49,139 @@ export async function POST(request: Request) {
       );
     }
 
+    // Create plaintext version of the email for better deliverability
+    const plainText = `
+Dziękujemy za zainteresowanie naszym raportem!
+
+Witaj ${firstName} ${lastName},
+
+W załączniku znajdziesz swój raport: ${reportName}.
+
+Dziękujemy, że korzystasz z naszych usług. Mamy nadzieję, że nasz raport okaże się pomocny w Twojej działalności.
+
+W razie pytań, jesteśmy do dyspozycji.
+
+Pozdrawiamy,
+Zespół Eurofins Polska
+
+---
+Ta wiadomość została wysłana na adres ${email}. Jeśli to nie Ty wysłałeś(aś) to zgłoszenie, prosimy zignorować tę wiadomość.
+
+Aby wypisać się z newslettera, wyślij email na adres: unsubscribe@raportbranzowy.pl
+
+---
+Eurofins Polska Sp. z o.o.
+Aleja Wojska Polskiego 90A
+82-200 Malbork
+NIP: 5792000046
+`;
+
+    // Email headers to improve deliverability
+    const emailHeaders = {
+      'List-Unsubscribe': `<mailto:unsubscribe@raportbranzowy.pl?subject=unsubscribe&email=${email}>`,
+      'X-Entity-Ref-ID': `report-${report}-${Date.now()}`, // Unique ID for each email
+      'X-Report-Type': report,
+      'X-Report-Abuse': 'Please forward this email to abuse@raportbranzowy.pl',
+    };
+    
     // Send email with Resend
     const { data, error } = await resend.emails.send({
-      from: 'Raporty Branżowe <no-reply@raportbranzowy.pl>',
+      from: 'Eurofins Polska <raporty@raportbranzowy.pl>',
       to: email,
       subject: `Twój raport: ${reportName} - Eurofins Polska`,
+      headers: emailHeaders,
+      replyTo: 'kontakt@raportbranzowy.pl',
       html: `
-        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-          <h1 style="color: #E74C3C;">Dziękujemy za zainteresowanie naszym raportem!</h1>
-          <p>Witaj ${firstName} ${lastName},</p>
-          <p>W załączniku znajdziesz swój raport: <strong>${reportName}</strong>.</p>
-          <p>Dziękujemy, że korzystasz z naszych usług. Mamy nadzieję, że nasz raport okaże się pomocny w Twojej działalności.</p>
-          <p>Pozdrawiamy,<br/>Zespół Eurofins Polska</p>
-          <hr style="border: none; border-top: 1px solid #eee; margin: 20px 0;" />
-          <p style="font-size: 12px; color: #777;">
-            Ta wiadomość została wysłana na adres ${email}. Jeśli to nie Ty wysłałeś(aś) to zgłoszenie, prosimy zignorować tę wiadomość.
-          </p>
-        </div>
+        <!DOCTYPE html>
+        <html lang="pl">
+        <head>
+          <meta charset="UTF-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          <meta name="color-scheme" content="light">
+          <meta name="supported-color-schemes" content="light">
+          <title>Eurofins Polska - Raport Branżowy</title>
+          <!--[if mso]>
+          <style type="text/css">
+            table {border-collapse: collapse;}
+            td,th,div,p,a,h1,h2,h3,h4,h5,h6 {font-family: "Segoe UI", sans-serif; mso-line-height-rule: exactly;}
+          </style>
+          <![endif]-->
+        </head>
+        <body style="margin: 0; padding: 0; font-family: Arial, sans-serif; background-color: #f5f5f5;">
+          <table cellpadding="0" cellspacing="0" border="0" width="100%" style="max-width: 600px; margin: 0 auto; background-color: ${EUROFINS_WHITE};">
+            <!-- Header with logo and brand color bar -->
+            <tr>
+              <td style="background-color: ${EUROFINS_NAVY}; padding: 20px; text-align: center;">
+                <h1 style="color: ${EUROFINS_WHITE}; margin: 0; font-size: 24px;">Eurofins Polska</h1>
+              </td>
+            </tr>
+            
+            <!-- Orange accent bar -->
+            <tr>
+              <td style="background-color: ${EUROFINS_ORANGE}; height: 5px;"></td>
+            </tr>
+            
+            <!-- Main content -->
+            <tr>
+              <td style="padding: 30px 20px;">
+                <h2 style="color: ${EUROFINS_NAVY}; margin-top: 0;">Dziękujemy za zainteresowanie naszym raportem!</h2>
+                
+                <p style="color: #333; line-height: 1.5;">Witaj <strong>${firstName} ${lastName}</strong>,</p>
+                
+                <p style="color: #333; line-height: 1.5;">W załączniku znajdziesz swój raport:</p>
+                
+                <div style="background-color: #f5f5f5; border-left: 4px solid ${EUROFINS_ORANGE}; padding: 15px; margin: 20px 0;">
+                  <h3 style="color: ${EUROFINS_NAVY}; margin: 0;">${reportName}</h3>
+                </div>
+                
+                <p style="color: #333; line-height: 1.5;">Dziękujemy, że korzystasz z naszych usług. Mamy nadzieję, że nasz raport okaże się pomocny w Twojej działalności.</p>
+                
+                <p style="color: #333; line-height: 1.5; margin-bottom: 30px;">W razie pytań, jesteśmy do dyspozycji.</p>
+                
+                <table cellpadding="0" cellspacing="0" border="0" width="100%">
+                  <tr>
+                    <td>
+                      <div style="background-color: ${EUROFINS_NAVY}; color: ${EUROFINS_WHITE}; padding: 15px; border-radius: 5px;">
+                        <p style="margin: 0;"><strong>Pozdrawiamy,</strong><br/>Zespół Eurofins Polska</p>
+                      </div>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+            
+            <!-- Footer -->
+            <tr>
+              <td style="background-color: #f5f5f5; padding: 20px; text-align: center; border-top: 1px solid #ddd;">
+                <p style="color: #777; font-size: 12px; margin-bottom: 15px;">
+                  Ta wiadomość została wysłana na adres ${email}.<br/>
+                  Jeśli to nie Ty wysłałeś(aś) to zgłoszenie, prosimy zignorować tę wiadomość.
+                </p>
+                
+                <p style="color: #777; font-size: 12px; margin-bottom: 15px;">
+                  <a href="raportbranzowy.pl/unsubscribe?email=${email}" style="color: ${EUROFINS_NAVY}; text-decoration: underline;">Wypisz się z newslettera</a>
+                </p>
+                
+                <div style="border-top: 1px solid #ddd; padding-top: 15px; margin-top: 15px;">
+                  <p style="color: #777; font-size: 11px; margin: 0; line-height: 1.4;">
+                    <strong>Eurofins Polska Sp. z o.o.</strong><br/>
+                    Aleja Wojska Polskiego 90A<br/>
+                    82-200 Malbork<br/>
+                    NIP: 5792000046
+                  </p>
+                </div>
+              </td>
+            </tr>
+            
+            <!-- Orange accent bar at bottom -->
+            <tr>
+              <td style="background-color: ${EUROFINS_ORANGE}; height: 5px;"></td>
+            </tr>
+          </table>
+        </body>
+        </html>
       `,
+      text: plainText,
       attachments: contentBuffer ? [
         {
           filename: `${report}.pdf`,

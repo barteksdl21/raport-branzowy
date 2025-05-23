@@ -69,48 +69,6 @@ export default async function ReportDetailPage({ params }: { params: { slug: str
           </Button>
         </div>
       </div>
-
-      {/* Form section - full width distinct section */}
-      <section className="w-full bg-gray-100 py-16" id="formularz">
-        <div className="container mx-auto px-4">
-          <div className="grid md:grid-cols-2 gap-16 items-center">
-            <div>
-              <h1 className="text-3xl font-bold mb-6 text-gray-900">Pobierz raport branżowy</h1>
-              <p className="text-lg mb-8 text-gray-700">
-                Wypełnij formularz, aby otrzymać wybrany raport branżowy na swój adres e-mail. 
-                Nasze raporty zawierają cenne informacje, które pomogą Ci podejmować lepsze decyzje biznesowe.
-              </p>
-              
-              <div className="space-y-4">
-                <div className="flex items-center">
-                  <div className="h-6 w-6 rounded-full bg-eurofins-orange flex items-center justify-center text-white text-sm font-medium mr-3">1</div>
-                  <span className="text-gray-700">Szczegółowe analizy laboratoryjne</span>
-                </div>
-                <div className="flex items-center">
-                  <div className="h-6 w-6 rounded-full bg-eurofins-orange flex items-center justify-center text-white text-sm font-medium mr-3">2</div>
-                  <span className="text-gray-700">Trendy rynkowe i konsumenckie</span>
-                </div>
-                <div className="flex items-center">
-                  <div className="h-6 w-6 rounded-full bg-eurofins-orange flex items-center justify-center text-white text-sm font-medium mr-3">3</div>
-                  <span className="text-gray-700">Porównanie z normami europejskimi</span>
-                </div>
-                <div className="flex items-center">
-                  <div className="h-6 w-6 rounded-full bg-eurofins-orange flex items-center justify-center text-white text-sm font-medium mr-3">4</div>
-                  <span className="text-gray-700">Rekomendacje dla producentów</span>
-                </div>
-                <div className="flex items-center">
-                  <div className="h-6 w-6 rounded-full bg-eurofins-orange flex items-center justify-center text-white text-sm font-medium mr-3">5</div>
-                  <span className="text-gray-700">Dostęp do ekspertów Eurofins</span>
-                </div>
-              </div>
-            </div>
-            
-            <div className="bg-white p-8 rounded-lg shadow-md">
-              <ReportForm defaultReport={report.title} />
-            </div>
-          </div>
-        </div>
-      </section>
       
       {/* Main content area for report details */}
       <section className="py-16 bg-white">
@@ -180,14 +138,49 @@ export default async function ReportDetailPage({ params }: { params: { slug: str
                   ))}
                 </ul>
               </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+  
+      {/* Form section - full width distinct section */}
+      <section className="w-full bg-gray-100 py-16" id="formularz">
+        <div className="container mx-auto px-4">
+          <div className="grid md:grid-cols-2 gap-16 items-center">
+            <div>
+              <h1 className="text-3xl font-bold mb-6 text-gray-900">Pobierz raport branżowy</h1>
+              <p className="text-lg mb-8 text-gray-700">
+                Wypełnij formularz, aby otrzymać wybrany raport branżowy na swój adres e-mail. 
+                Nasze raporty zawierają cenne informacje, które pomogą Ci podejmować lepsze decyzje biznesowe.
+              </p>
               
-              <div className="mt-6 bg-blue-50 p-6 rounded-lg border border-blue-100">
-                <h3 className="text-lg font-semibold text-blue-800 mb-2">Dostępność danych</h3>
-                <p className="text-blue-700 mb-4">Pełne dane oraz analizy są dostępne w kompletnym raporcie.</p>
-                <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white">
-                  <a href="#formularz">Pobierz pełny raport</a>
-                </Button>
+              <div className="space-y-4">
+                <div className="flex items-center">
+                  <div className="h-6 w-6 rounded-full bg-eurofins-orange flex items-center justify-center text-white text-sm font-medium mr-3">1</div>
+                  <span className="text-gray-700">Szczegółowe analizy laboratoryjne</span>
+                </div>
+                <div className="flex items-center">
+                  <div className="h-6 w-6 rounded-full bg-eurofins-orange flex items-center justify-center text-white text-sm font-medium mr-3">2</div>
+                  <span className="text-gray-700">Trendy rynkowe i konsumenckie</span>
+                </div>
+                <div className="flex items-center">
+                  <div className="h-6 w-6 rounded-full bg-eurofins-orange flex items-center justify-center text-white text-sm font-medium mr-3">3</div>
+                  <span className="text-gray-700">Porównanie z normami europejskimi</span>
+                </div>
+                <div className="flex items-center">
+                  <div className="h-6 w-6 rounded-full bg-eurofins-orange flex items-center justify-center text-white text-sm font-medium mr-3">4</div>
+                  <span className="text-gray-700">Rekomendacje dla producentów</span>
+                </div>
+                <div className="flex items-center">
+                  <div className="h-6 w-6 rounded-full bg-eurofins-orange flex items-center justify-center text-white text-sm font-medium mr-3">5</div>
+                  <span className="text-gray-700">Dostęp do ekspertów Eurofins</span>
+                </div>
               </div>
+            </div>
+            
+            <div className="bg-white p-8 rounded-lg shadow-md">
+              <ReportForm defaultReport={report.title} />
             </div>
           </div>
         </div>
