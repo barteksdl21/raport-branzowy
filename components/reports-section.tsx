@@ -88,7 +88,12 @@ export function ReportsSection() {
                 <CardDescription>{report.description}</CardDescription>
               </CardHeader>
               <CardFooter>
-                <Button asChild className="w-full bg-primary hover:bg-primary/90" disabled={report.comingSoon}>
+                <Button asChild className={`w-full ${
+                  report.comingSoon
+                    ? 'bg-muted text-muted-foreground'
+                    : 'bg-primary text-primary-foreground hover:bg-primary/90'
+                }`}
+                disabled={report.comingSoon}>
                   <Link href={report.comingSoon ? '#' : `/raporty/${report.slug}`}>
                     <FileText className="mr-2 h-4 w-4" />
                     {report.comingSoon ? "Dostępne wkrótce" : "Zobacz szczegóły"}
