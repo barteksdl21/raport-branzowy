@@ -9,13 +9,14 @@ import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Checkbox } from "@/components/ui/checkbox"
 import { useInView } from "react-intersection-observer"
-import { CheckCircle2 } from "lucide-react"
+import { CheckCircle2 } from "lucide-react";
+import { GoogleReCaptchaProvider, useGoogleReCaptcha } from 'react-google-recaptcha-v3';
 
 interface FormSectionProps {
   defaultReport?: string;
 }
 
-export function FormSection({ defaultReport = "" }: FormSectionProps) {
+const FormContent = ({ defaultReport = "" }: FormSectionProps) => {
   const [formState, setFormState] = useState({
     firstName: "",
     lastName: "",
@@ -27,7 +28,8 @@ export function FormSection({ defaultReport = "" }: FormSectionProps) {
   })
 
   const [isSubmitted, setIsSubmitted] = useState(false)
-  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const { executeRecaptcha } = useGoogleReCaptcha();
   const [submitError, setSubmitError] = useState<string | null>(null)
 
   const { ref, inView } = useInView({
@@ -49,9 +51,31 @@ export function FormSection({ defaultReport = "" }: FormSectionProps) {
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setIsSubmitting(true)
-    setSubmitError(null) // Clear previous errors
+    e.preventDefault();
+    setIsSubmitting(true);
+    setSubmitError(null);
+
+    if (!executeRecaptcha) {
+      setSubmitError("ReCAPTCHA not loaded yet. Please try again in a moment.");
+      setIsSubmitting(false);
+      return;
+    }
+
+    let recaptchaToken;
+    try {
+      recaptchaToken = await executeRecaptcha('submit_form_raport_branzowy');
+    } catch (error) {
+      console.error('Error executing reCAPTCHA:', error);
+      setSubmitError('Błąd podczas weryfikacji reCAPTCHA. Spróbuj ponownie.');
+      setIsSubmitting(false);
+      return;
+    }
+
+    if (!recaptchaToken) {
+      setSubmitError("Nie udało się uzyskać tokena reCAPTCHA. Spróbuj ponownie.");
+      setIsSubmitting(false);
+      return;
+    }
 
     try {
       const response = await fetch('/api/send-report', {
@@ -60,21 +84,16 @@ export function FormSection({ defaultReport = "" }: FormSectionProps) {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          firstName: formState.firstName,
-          lastName: formState.lastName,
-          email: formState.email,
-          company: formState.company,
-          report: formState.report,
-          consent: formState.consent, // Added consent field
-          marketing: formState.marketing, // Added marketing field
+          ...formState,
+          recaptchaToken, // Send v3 token to backend
         }),
       });
-      
+
       if (!response.ok) {
         const errorData = await response.json();
         throw new Error(errorData.error || 'Failed to send report');
       }
-      
+
       setIsSubmitted(true);
     } catch (error) {
       console.error('Error submitting form:', error);
@@ -86,7 +105,7 @@ export function FormSection({ defaultReport = "" }: FormSectionProps) {
     } finally {
       setIsSubmitting(false);
     }
-  }
+  };
 
   return (
     <section ref={ref} id="formularz" className="w-full py-12 md:py-24 bg-muted">
@@ -240,4 +259,26 @@ export function FormSection({ defaultReport = "" }: FormSectionProps) {
       </div>
     </section>
   )
+}
+
+export function FormSection({ defaultReport = "" }: FormSectionProps) {
+  const siteKey = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY;
+
+  if (!siteKey) {
+    console.error("ReCAPTCHA Site Key is not defined. Please set NEXT_PUBLIC_RECAPTCHA_SITE_KEY environment variable.");
+    // Optionally render a message to the user or a disabled form
+    return (
+      <section id="formularz" className="w-full py-12 md:py-24 bg-muted">
+        <div className="container px-4 md:px-6 text-center">
+          <p className="text-red-500">Konfiguracja formularza jest niekompletna. Skontaktuj się z administratorem.</p>
+        </div>
+      </section>
+    );
+  }
+
+  return (
+    <GoogleReCaptchaProvider reCaptchaKey={siteKey}>
+      <FormContent defaultReport={defaultReport} />
+    </GoogleReCaptchaProvider>
+  );
 }

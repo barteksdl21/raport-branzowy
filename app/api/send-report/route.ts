@@ -38,6 +38,8 @@ const REPORT_ATTACHMENT_URLS: Record<string, string> = {
   beverages: 'https://zj2d6vfvf7afuoiu.public.blob.vercel-storage.com/sample.pdf', // Replace with actual URL
 };
 
+const RECAPTCHA_V3_THRESHOLD = 0.5; // Adjust this threshold as needed
+
 export async function POST(request: Request) {
   // Environment variable checks
   if (!process.env.RESEND_API_KEY) {
@@ -69,8 +71,66 @@ export async function POST(request: Request) {
       company: rawCompany,
       report: rawReport,
       consent,
-      marketing
+      marketing,
+      recaptchaToken // Added recaptchaToken
     } = rawBody;
+
+    // reCAPTCHA v3 Verification
+    const secretKey = process.env.RECAPTCHA_SECRET_KEY;
+    if (!secretKey) {
+      console.error("RECAPTCHA_SECRET_KEY is not set.");
+      return NextResponse.json({ error: 'Service configuration error (reCAPTCHA).' }, { status: 503 });
+    }
+
+    if (!recaptchaToken) {
+      return NextResponse.json({ error: 'reCAPTCHA token is missing.' }, { status: 400 });
+    }
+
+    try {
+      const verificationResponse = await fetch(
+        `https://www.google.com/recaptcha/api/siteverify`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+          },
+          body: `secret=${secretKey}&response=${recaptchaToken}`,
+        }
+      );
+
+      const verificationData = await verificationResponse.json();
+      console.log('reCAPTCHA verification data:', verificationData); // Log for debugging
+
+      // Determine expected hostname
+      const requestUrl = new URL(request.url);
+      const expectedHostname = requestUrl.hostname; // More reliable than req.headers.host in some environments
+
+      if (!(
+        verificationData.success &&
+        verificationData.score >= RECAPTCHA_V3_THRESHOLD &&
+        verificationData.action === 'submit_form_raport_branzowy' && 
+        verificationData.hostname === expectedHostname
+      )) {
+        let errorMessage = 'reCAPTCHA verification failed.';
+        if (!verificationData.success) {
+            errorMessage = `reCAPTCHA check failed. Errors: ${verificationData['error-codes']?.join(', ')}`;
+        } else if (verificationData.action !== 'submit_form_raport_branzowy') {
+            errorMessage = `reCAPTCHA action mismatch. Expected 'submit_form_raport_branzowy', got '${verificationData.action}'`;
+        } else if (verificationData.hostname !== expectedHostname) {
+            errorMessage = `reCAPTCHA hostname mismatch. Expected '${expectedHostname}', got '${verificationData.hostname}'`;
+        } else if (verificationData.score < RECAPTCHA_V3_THRESHOLD) {
+            errorMessage = `reCAPTCHA score too low: ${verificationData.score}. Threshold: ${RECAPTCHA_V3_THRESHOLD}`;
+        }
+        console.error(errorMessage, verificationData);
+        return NextResponse.json({ error: errorMessage, details: verificationData['error-codes'] }, { status: 400 });
+      }
+      // reCAPTCHA verification successful
+      console.log('reCAPTCHA verification successful. Score:', verificationData.score);
+
+    } catch (error) {
+      console.error('Server error during reCAPTCHA verification:', error);
+      return NextResponse.json({ error: 'Server error during reCAPTCHA verification.' }, { status: 500 });
+    }
 
     // Trim string inputs
     const firstName = typeof rawFirstName === 'string' ? rawFirstName.trim() : '';
@@ -244,7 +304,7 @@ Ta wiadomość została wysłana na adres ${email}. Jeśli to nie Ty wysłałeś
 
     if (showUnsubscribeInfo) {
       plainText += `
-Aby wypisać się z newslettera, odwiedź https://raportbranzowy.pl/unsubscribe?email=${encodeURIComponent(email)} lub odpowiedz na tę wiadomość wpisując "unsubscribe".
+Aby anulować subskrypcję, odwiedź https://raportbranzowy.pl/unsubscribe?email=${encodeURIComponent(email)}.
 `;
     }
 
@@ -343,7 +403,7 @@ NIP: 5792000046
                 
                 ${showUnsubscribeInfo ? `
                 <p style="color: #777; font-size: 12px; margin-bottom: 15px;">
-                  <a href="https://raportbranzowy.pl/unsubscribe?email=${encodeURIComponent(email)}" style="color: ${EUROFINS_NAVY}; text-decoration: underline;">Wypisz się z newslettera</a>
+                  <a href="https://raportbranzowy.pl/unsubscribe?email=${encodeURIComponent(email)}" style="color: ${EUROFINS_NAVY}; text-decoration: underline;">Anuluj subskrypcję</a>
                 </p>
                 ` : ''}
                 
