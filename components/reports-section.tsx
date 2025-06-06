@@ -15,7 +15,7 @@ const reports = [
     slug: "raport-branzy-mleczarskiej",
     description:
       "Szczegółowe badania produktów mlecznych. Analiza jakości, bezpieczeństwa i innowacji w sektorze mleczarskim.",
-    image: "/okladka-mleko.png?height=200&width=300",
+    image: "/okladka-mleko.webp",
     comingSoon: false,
   },
   {
@@ -24,7 +24,7 @@ const reports = [
     slug: "raport-branzy-miesnej",
     description:
       "Kompleksowa analiza rynku mięsnego w Polsce. Badania mikrobiologiczne, fizykochemiczne oraz szybkie i dokładne metody analityczne.",
-    image: "/okladka-mieso.png?height=200&width=300",
+    image: "/okladka-mieso.webp",
     comingSoon: true,
   },
   {
@@ -76,7 +76,7 @@ export function ReportsSection() {
               style={{ animationDelay: `${0.1 * index}s` }}
             >
               <div className="relative h-48 w-full">
-                <Image src={report.image || "/placeholder.svg"} alt={report.title} fill className="object-cover" />
+                <Image src={report.image || "/placeholder.svg"} alt={report.title} fill className="object-contain" />
               </div>
               <CardHeader>
                 <CardTitle className="text-xl text-primary">{report.title}</CardTitle>
