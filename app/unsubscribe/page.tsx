@@ -1,7 +1,5 @@
 'use client';
 
-import type { Metadata } from 'next';
-
 import { useState, useEffect, FormEvent, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
@@ -10,40 +8,6 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { CheckCircle2, AlertTriangle, Loader2 } from 'lucide-react';
 
-export async function generateMetadata(): Promise<Metadata> {
-  return {
-  title: 'Wypisz się z Newslettera | Eurofins Polska',
-  description: 'Zarządzaj swoimi subskrypcjami newslettera Eurofins Polska.',
-  robots: {
-    index: false,
-    follow: false,
-    nocache: true,
-    googleBot: {
-      index: false,
-      follow: false,
-      noimageindex: true,
-      'max-video-preview': -1,
-      'max-image-preview': 'large',
-      'max-snippet': -1,
-    },
-  },
-  openGraph: {
-    title: 'Wypisz się z Newslettera | Eurofins Polska',
-    description: 'Zarządzaj swoimi subskrypcjami newslettera Eurofins Polska.',
-    url: 'https://raportbranzowy.pl/unsubscribe',
-    locale: 'pl_PL',
-    type: 'website',
-  },
-  twitter: {
-    card: 'summary_large_image',
-    title: 'Wypisz się z Newslettera | Eurofins Polska',
-    description: 'Zarządzaj swoimi subskrypcjami newslettera Eurofins Polska.',
-  },
-  alternates: {
-    canonical: 'https://raportbranzowy.pl/unsubscribe',
-  }
-  };
-}
 
 function UnsubscribeFormContent() {
   const searchParams = useSearchParams();
