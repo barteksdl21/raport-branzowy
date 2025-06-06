@@ -15,7 +15,7 @@ const reports = [
     slug: "raport-branzy-mleczarskiej",
     description:
       "Szczegółowe badania produktów mlecznych. Analiza jakości, bezpieczeństwa i innowacji w sektorze mleczarskim.",
-    image: "/placeholder.svg?height=200&width=300",
+    image: "/okladka-mleko.png?height=200&width=300",
     comingSoon: false,
   },
   {
@@ -23,15 +23,15 @@ const reports = [
     title: "Raport branży mięsnej",
     slug: "raport-branzy-miesnej",
     description:
-      "Kompleksowa analiza rynku mięsnego w Polsce. Badania mikrobiologiczne, fizykochemiczne oraz trendy konsumenckie.",
-    image: "/placeholder.svg?height=200&width=300",
+      "Kompleksowa analiza rynku mięsnego w Polsce. Badania mikrobiologiczne, fizykochemiczne oraz szybkie i dokładne metody analityczne.",
+    image: "/okladka-mieso.png?height=200&width=300",
     comingSoon: true,
   },
   {
     id: 3,
     title: "Raport branży owocowo-warzywnej",
     slug: "raport-branzy-owocowo-warzywnej",
-    description: "Badania pozostałości pestycydów, metali ciężkich oraz jakości mikrobiologicznej owoców i warzyw.",
+    description: "Diagnostyka chorób roślin, nowe kierunki zainteresowania w zakresie badań i skuteczne metody analityczne.",
     image: "/placeholder.svg?height=200&width=300",
     comingSoon: true,
   },
@@ -61,7 +61,7 @@ export function ReportsSection() {
               Nasze raporty branżowe
             </h2>
             <p className="max-w-[700px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
-              Wybierz interesujący Cię raport i uzyskaj dostęp do najnowszych analiz laboratoryjnych dla Twojej branży.
+            Wybierz raport i zobacz co testują inni, jakie parametry zyskują na znaczeniu oraz jakie analizy mogą wesprzeć Twoje działania prewencyjne w zakresie bezpieczeństwa i jakości produktów spożywczych.
             </p>
           </div>
         </div>
@@ -77,11 +77,6 @@ export function ReportsSection() {
             >
               <div className="relative h-48 w-full">
                 <Image src={report.image || "/placeholder.svg"} alt={report.title} fill className="object-cover" />
-                {report.comingSoon && (
-                  <div className="absolute top-2 right-2 bg-gray-400 text-white px-3 py-1 rounded-full text-sm">
-                    Dostępne wkrótce
-                  </div>
-                )}
               </div>
               <CardHeader>
                 <CardTitle className="text-xl text-primary">{report.title}</CardTitle>

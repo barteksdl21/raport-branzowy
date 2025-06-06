@@ -9,8 +9,9 @@ import type { Metadata } from 'next';
 // This would typically come from a database or API
 
 export async function generateMetadata(
-  { params }: { params: { slug: string } }
+  { params: paramsPromise }: { params: Promise<{ slug: string }> }
 ): Promise<Metadata> {
+  const params = await paramsPromise;
   const slug = params.slug;
   const report = reports.find((r) => r.slug === slug);
 
@@ -24,7 +25,7 @@ export async function generateMetadata(
   }
 
   return {
-    title: report.title + " | Raporty Branżowe Eurofins Polska", // Appending site name for consistency
+    title: report.title + " | Eurofins Polska",
     description: report.description,
   };
 }
@@ -38,11 +39,14 @@ const reports = [
     description:
       "Kompleksowa analiza rynku mięsnego w Polsce. Badania mikrobiologiczne, fizykochemiczne oraz trendy konsumenckie.",
     longDescription:
-      "Nasz raport branży mięsnej dostarcza szczegółowych informacji na temat jakości i bezpieczeństwa produktów mięsnych dostępnych na polskim rynku. Zawiera analizę wyników badań laboratoryjnych, w tym obecności drobnoustrojów, metali ciężkich oraz dodatków do żywności. Raport zawiera również porównanie z normami unijnymi i rekomendacje dla producentów.",
+      "Nasz raport dotyczący branży mleczarskiej to kompleksowe źródło wiedzy na temat dostępnych rozwiązań i metod analitycznych, zapewniających bezpieczeństwo i jakość produktów. Zawiera szczegółową analizę wyników badań laboratoryjnych, obejmującą m.in. obecność drobnoustrojów, metali ciężkich oraz dodatków do żywności. Dodatkowo, raport prezentuje porównanie z obowiązującymi normami unijnymi oraz zawiera praktyczne rekomendacje dla producentów.",
+    methodology:
+      "Badania mikrobiologiczne, fizykochemiczne oraz trendy konsumenckie.",
+    whyItMatters:
+      "Raport dostarcza cennych informacji dla producentów, dystrybutorów oraz instytucji kontrolnych. Zawarte w nim dane pozwalają na lepsze zrozumienie rynku, identyfikację zagrożeń oraz dostosowanie produktów do oczekiwań konsumentów i wymogów prawnych.",
     image: "/placeholder.svg?height=500&width=800",
     comingSoon: false,
     keyFindings: [
-      "Analiza ponad 500 próbek produktów mięsnych",
       "Badania mikrobiologiczne i fizykochemiczne",
       "Ocena zgodności z normami UE",
       "Trendy konsumenckie w branży mięsnej",
@@ -56,24 +60,28 @@ const reports = [
     slug: "raport-branzy-mleczarskiej",
     formValue: "dairy",
     description:
-      "Kompleksowa analiza rynku mleczarskiego w Polsce. Badania mikrobiologiczne, fizykochemiczne oraz trendy konsumenckie.",
+      "Szczegółowe badania produktów mlecznych. Analiza jakości, bezpieczeństwa i innowacji w sektorze mleczarskim.",
     longDescription:
       "Nasz raport branży mleczarskiej dostarcza szczegółowych informacji na temat jakości i bezpieczeństwa produktów mlecznych dostępnych na polskim rynku. Zawiera analizę wyników badań laboratoryjnych, w tym obecności drobnoustrojów, metali ciężkich oraz dodatków do żywności. Raport zawiera również porównanie z normami unijnymi i rekomendacje dla producentów.",
+    methodology:
+      "Raport powstał w oparciu o badania przeprowadzone w laboratoriach Eurofins Polska, realizowane zgodnie z najwyższymi standardami jakości i rzetelności. Analizy obejmują szeroki zakres testów mikrobiologicznych, fizykochemicznych oraz sensorycznych, przeprowadzonych na próbkach produktów dostępnych na polskim rynku mleczarskim.",
+    whyItMatters:
+      "Raport stanowi cenne narzędzie dla producentów oraz dystrybutorów z branży mleczarskiej. Dostarcza szczegółowych danych, które pomagają lepiej zrozumieć aktualne trendy i wyzwania, opracować sposoby zarządzania zagrożeniami mikrobiologicznymi w środowisku produkcji oraz optymalizować ofertę produktową, tak by spełniała oczekiwania konsumentów i wymogi prawne.",
     image: "/placeholder.svg?height=500&width=800",
     comingSoon: false,
     keyFindings: [
-      "Analiza ponad 500 próbek produktów mlecznych",
       "Badania mikrobiologiczne i fizykochemiczne",
       "Ocena zgodności z normami UE",
-      "Trendy konsumenckie w branży mleczarskiej",
+      "Zafałszowania produktów mlecznych",
       "Rekomendacje dla producentów"
     ]
   }
 ]
 
-export default async function ReportDetailPage({ params }: { params: { slug: string } }) {
+export default async function ReportDetailPage({ params: paramsPromise }: { params: Promise<{ slug: string }> }) {
   // Ensure params are awaited before use
-  const slug = await Promise.resolve(params.slug)
+  const params = await paramsPromise;
+  const slug = params.slug;
   
   const report = reports.find((r) => r.slug === slug)
 
@@ -121,8 +129,7 @@ export default async function ReportDetailPage({ params }: { params: { slug: str
                   Metodologia
                 </h2>
                 <p className="text-lg text-gray-600">
-                  Raport został przygotowany na podstawie badań przeprowadzonych w laboratoriach Eurofins zgodnie z najwyższymi standardami jakości. 
-                  Analizy obejmują badania mikrobiologiczne, fizykochemiczne oraz sensoryczne produktów dostępnych na polskim rynku.
+                  {report.methodology}
                 </p>
               </div>
               
@@ -132,9 +139,7 @@ export default async function ReportDetailPage({ params }: { params: { slug: str
                   Dlaczego warto?
                 </h2>
                 <p className="text-lg text-gray-600">
-                  Raport dostarcza cennych informacji dla producentów, dystrybutorów oraz instytucji kontrolnych. 
-                  Zawarte w nim dane pozwalają na lepsze zrozumienie rynku, identyfikację zagrożeń oraz dostosowanie 
-                  produktów do oczekiwań konsumentów i wymogów prawnych.
+                  {report.whyItMatters}
                 </p>
               </div>
             </div>
@@ -142,7 +147,7 @@ export default async function ReportDetailPage({ params }: { params: { slug: str
             {/* Key findings sidebar */}
             <div className="md:col-span-1">
               <div className="bg-gray-50 p-6 rounded-lg border border-gray-100">
-                <h2 className="text-xl font-semibold text-gray-900 mb-4">Kluczowe wnioski</h2>
+                <h2 className="text-xl font-semibold text-gray-900 mb-4">Kluczowe obszary</h2>
                 <ul className="space-y-4">
                   {report.keyFindings.map((finding, index) => (
                     <li key={index} className="flex items-start pb-3 border-b border-gray-200 last:border-0">

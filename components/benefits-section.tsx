@@ -52,7 +52,7 @@ export function BenefitsSection() {
               Korzyści z naszych raportów
             </h2>
             <p className="max-w-[700px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
-              Dlaczego warto sięgnąć po raporty branżowe Eurofins Polska? Poznaj kluczowe korzyści dla Twojego biznesu.
+            Odkryj kluczowe wartości, które zyskasz dzięki raportom Eurofins Polska.
             </p>
           </div>
         </div>

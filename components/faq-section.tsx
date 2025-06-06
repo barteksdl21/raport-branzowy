@@ -15,11 +15,6 @@ const faqs = [
       "Tak, nasze raporty branżowe są dostępne bezpłatnie dla firm z sektora spożywczego. Wymagane jest jedynie wypełnienie formularza z danymi kontaktowymi.",
   },
   {
-    question: "Jak często publikowane są nowe raporty?",
-    answer:
-      "Nowe raporty branżowe publikujemy raz w roku dla każdego sektora. Dodatkowo, w ciągu roku mogą pojawiać się aktualizacje lub raporty specjalne dotyczące konkretnych zagadnień.",
-  },
-  {
     question: "Jakie informacje zawierają raporty branżowe?",
     answer:
       "Nasze raporty zawierają kompleksowe analizy laboratoryjne produktów z danej branży, trendy rynkowe, porównania z normami europejskimi, informacje o zagrożeniach i zanieczyszczeniach oraz rekomendacje dla producentów.",
@@ -73,7 +68,7 @@ export function FaqSection() {
           className={`mt-10 text-center ${inView ? "animate-fade-in" : "opacity-0"}`}
           style={{ animationDelay: "0.4s" }}
         >
-          <p className="text-muted-foreground">Nie znalazłeś odpowiedzi na swoje pytanie? Skontaktuj się z nami:</p>
+          <p className="text-muted-foreground">Chcesz nawiązać współpracę? Skontaktuj się z nami:</p>
           <p className="font-medium text-primary mt-2"><a href="mailto:wyceny-oferta@eurofins.com">wyceny-oferta@eurofins.com</a> | +48 55 272 04 73</p>
         </div>
       </div>

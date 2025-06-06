@@ -36,11 +36,11 @@ export function AboutSection() {
               O Eurofins Polska
             </div>
             <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl text-primary">
-              Lider w badaniach laboratoryjnych dla przemysłu spożywczego
+              Lider w badaniach laboratoryjnych dla branży spożywczej
             </h2>
             <p className="text-muted-foreground">
               Eurofins Polska to część międzynarodowej grupy Eurofins Scientific, światowego lidera w dziedzinie badań
-              laboratoryjnych. Specjalizujemy się w kompleksowych analizach dla przemysłu spożywczego, zapewniając
+              laboratoryjnych. Specjalizujemy się w kompleksowych analizach dla sektora spożywczego, zapewniając
               najwyższą jakość i bezpieczeństwo produktów.
             </p>
 
@@ -73,14 +73,13 @@ export function AboutSection() {
                 <Users className="h-6 w-6 text-eurofins-orange mt-1" />
                 <div>
                   <h3 className="font-bold text-primary">Zespół ekspertów</h3>
-                  <p className="text-sm text-muted-foreground">Doświadczeni specjaliści z różnych dziedzin</p>
+                  <p className="text-sm text-muted-foreground">Merytoryczne wsparcie i zawsze aktualna wiedza</p>
                 </div>
               </div>
             </div>
 
             <p className="text-muted-foreground">
-              Nasze raporty branżowe to efekt wieloletnich badań i analiz, które pomagają producentom żywności podnosić
-              jakość swoich produktów i spełniać wymagania rynkowe oraz prawne.
+            Nasze raporty branżowe powstały na bazie bogatego doświadczenia i dokładnych analiz, które każdego dnia pomagają producentom żywności podnosić jakość swoich produktów oraz spełniać wymagania rynkowe i prawne.
             </p>
 
             <Button asChild className="bg-primary hover:bg-primary/90 text-white">

@@ -114,8 +114,7 @@ const FormContent = ({ defaultReport = "" }: FormSectionProps) => {
           <div className={`space-y-4 ${inView ? "animate-slide-in-left" : "opacity-0"}`}>
             <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl text-primary">Pobierz raport branżowy</h2>
             <p className="text-muted-foreground md:text-xl">
-              Wypełnij formularz, aby otrzymać wybrany raport branżowy na swój adres e-mail. Nasze raporty zawierają
-              cenne informacje, które pomogą Ci podejmować lepsze decyzje biznesowe.
+            Wypełnij formularz i otrzymaj wybrany raport bezpośrednio na swój e-mail. Znajdziesz w nim kluczowe informacje o branży, które pomogą Ci podejmować decyzje biznesowe dotyczące bezpieczeństwa i jakości Twoich produktów.
             </p>
             <div className="space-y-2">
               <div className="flex items-center">
