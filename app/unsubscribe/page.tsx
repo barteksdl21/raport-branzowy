@@ -10,7 +10,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { CheckCircle2, AlertTriangle, Loader2 } from 'lucide-react';
 
-export const metadata: Metadata = {
+export async function generateMetadata(): Promise<Metadata> {
+  return {
   title: 'Wypisz się z Newslettera | Eurofins Polska',
   description: 'Zarządzaj swoimi subskrypcjami newslettera Eurofins Polska.',
   robots: {
@@ -40,8 +41,9 @@ export const metadata: Metadata = {
   },
   alternates: {
     canonical: 'https://raportbranzowy.pl/unsubscribe',
-  },
-};
+  }
+  };
+}
 
 function UnsubscribeFormContent() {
   const searchParams = useSearchParams();
