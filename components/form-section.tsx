@@ -11,6 +11,7 @@ import { Checkbox } from "@/components/ui/checkbox"
 import { useInView } from "react-intersection-observer"
 import { CheckCircle2 } from "lucide-react";
 import { GoogleReCaptchaProvider, useGoogleReCaptcha } from 'react-google-recaptcha-v3';
+import { event as gaEvent } from '../lib/gtag';
 
 interface FormSectionProps {
   defaultReport?: string;
@@ -95,6 +96,14 @@ const FormContent = ({ defaultReport = "" }: FormSectionProps) => {
       }
 
       setIsSubmitted(true);
+
+      // Track form submission in Google Analytics
+      gaEvent({
+        action: 'form_submit',
+        category: 'RaportBranzowy',
+        label: formState.report || 'not_selected',
+        value: 1,
+      });
     } catch (error) {
       console.error('Error submitting form:', error);
       if (error instanceof Error) {
@@ -186,8 +195,8 @@ const FormContent = ({ defaultReport = "" }: FormSectionProps) => {
                     <SelectContent>
                       <SelectItem value="dairy">Raport branży mleczarskiej</SelectItem>
                       <SelectItem value="meat">Raport branży mięsnej</SelectItem>
-                      <SelectItem value="fruits">Raport branży owocowo-warzywnej</SelectItem>
-                      <SelectItem value="seafood">Raport branży rybnej</SelectItem>
+                      {/* <SelectItem value="fruits">Raport branży owocowo-warzywnej</SelectItem>
+                      <SelectItem value="seafood">Raport branży rybnej</SelectItem> */}
                     </SelectContent>
                   </Select>
                 </div>
