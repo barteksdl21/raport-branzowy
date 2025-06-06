@@ -1,8 +1,25 @@
-import React from 'react'
+import React from 'react';
+import type { Metadata } from 'next';
 
-export const metadata = {
+export const metadata: Metadata = {
   title: 'Polityka Prywatności | Eurofins Polska',
   description: 'Polityka prywatności dla raportów branżowych Eurofins Polska.',
+  openGraph: {
+    title: 'Polityka Prywatności | Eurofins Polska',
+    description: 'Zapoznaj się z polityką prywatności dotyczącą raportów branżowych Eurofins Polska.',
+    url: 'https://raportbranzowy.pl/polityka-prywatnosci',
+    siteName: 'Eurofins Polska Raporty Branżowe',
+    locale: 'pl_PL',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Polityka Prywatności | Eurofins Polska',
+    description: 'Zapoznaj się z polityką prywatności dotyczącą raportów branżowych Eurofins Polska.',
+ },
+  alternates: {
+    canonical: 'https://raportbranzowy.pl/polityka-prywatnosci',
+  },
 }
 
 export default function PrivacyPolicy() {
