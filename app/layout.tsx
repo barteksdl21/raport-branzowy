@@ -6,6 +6,7 @@ import { ThemeProvider } from "@/components/theme-provider"
 import Header from "@/components/header"
 import Footer from "@/components/footer"
 import { GoogleAnalytics } from "../lib/gtag"
+import CookieBanner from "@/components/CookieBanner";
 
 const inter = Inter({ subsets: ["latin", "latin-ext"] })
 
@@ -40,6 +41,7 @@ export default function RootLayout({
           </div>
         </ThemeProvider>
         <GoogleAnalytics />
+        <CookieBanner />
       </body>
     </html>
   )
