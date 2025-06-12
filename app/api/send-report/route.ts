@@ -41,6 +41,7 @@ const REPORT_ATTACHMENT_URLS: Record<string, string> = {
 const RECAPTCHA_V3_THRESHOLD = 0.5; // Adjust this threshold as needed
 
 export async function POST(request: Request) {
+  const requestUrl = new URL(request.url);
   // Environment variable checks
   if (!process.env.RESEND_API_KEY) {
     console.error("RESEND_API_KEY is not set.");
@@ -102,7 +103,7 @@ export async function POST(request: Request) {
       console.log('reCAPTCHA verification data:', verificationData); // Log for debugging
 
       // Determine expected hostname
-      const requestUrl = new URL(request.url);
+      // const requestUrl = new URL(request.url); // Moved to the top of POST function
       const expectedHostname = requestUrl.hostname; // More reliable than req.headers.host in some environments
 
       if (!(
@@ -156,6 +157,7 @@ export async function POST(request: Request) {
 
     // --- Database Operations ---
     let leadId: string;
+      let newsletterUnsubscribeToken: string | null = null;
     let showUnsubscribeInfo: boolean = false; // Initialize in broader scope
     try {
       // 1. Upsert Lead (create if new email, update if existing)
@@ -178,6 +180,7 @@ export async function POST(request: Request) {
       if (leadError) throw leadError;
       if (!leadData) throw new Error('Failed to create or find lead.');
       leadId = leadData.id;
+      
 
       // 2. Insert Report Download
       const { error: reportDownloadError } = await supabase
@@ -192,7 +195,7 @@ export async function POST(request: Request) {
       // 3. Upsert Newsletter Subscription
       const { data: existingSubscription, error: fetchSubError } = await supabase
         .from('newsletter_subscriptions')
-        .select('id, is_subscribed, subscribed_at, unsubscribed_at')
+        .select('id, is_newsletter_subscribed, is_marketing_subscribed, subscribed_at, unsubscribed_at, unsubscribe_token') // Fetch new columns and token
         .eq('lead_id', leadId)
         .maybeSingle();
 
@@ -200,37 +203,47 @@ export async function POST(request: Request) {
 
       // Determine if unsubscribe info should be shown in the email
       // Show if they are opting in now OR if they were already subscribed
-      showUnsubscribeInfo = !!marketing || (existingSubscription && existingSubscription.is_subscribed);
+      
 
       const now = new Date().toISOString();
       let subscriptionDataToUpsert: any = {
         lead_id: leadId,
-        is_subscribed: !!marketing, // Ensure boolean
+        is_marketing_subscribed: true, // For report download context
+        is_newsletter_subscribed: !!marketing, // Based on newsletter checkbox
+        unsubscribed_at: null, // Active subscription for marketing or newsletter
       };
 
       if (marketing) { // User wants to be subscribed
-        if (!existingSubscription || !existingSubscription.is_subscribed) {
+        if (!existingSubscription || !existingSubscription.is_newsletter_subscribed) { // Check against new column name
           subscriptionDataToUpsert.subscribed_at = now;
         } else {
           subscriptionDataToUpsert.subscribed_at = existingSubscription.subscribed_at;
         }
         subscriptionDataToUpsert.unsubscribed_at = null;
-      } else { // User does not want to be subscribed
-        if (existingSubscription && existingSubscription.is_subscribed) {
-          subscriptionDataToUpsert.unsubscribed_at = now;
-        } else if (existingSubscription) {
-          subscriptionDataToUpsert.unsubscribed_at = existingSubscription.unsubscribed_at;
+      } else { // User does not want to be subscribed to newsletter
+        // is_marketing_subscribed is true, so unsubscribed_at remains null for the record
+        // We only adjust newsletter specific fields if they are opting out of newsletter
+        if (existingSubscription && existingSubscription.is_newsletter_subscribed) {
+          // If they were subscribed to newsletter and now opt-out, keep marketing active
+          // The 'unsubscribed_at' for the whole record is null due to marketing consent
         }
-        if (existingSubscription) {
-            subscriptionDataToUpsert.subscribed_at = existingSubscription.subscribed_at;
+        // Preserve existing subscribed_at if they were already subscribed to newsletter and are unchecking it now
+        if (existingSubscription?.subscribed_at) {
+          subscriptionDataToUpsert.subscribed_at = existingSubscription.subscribed_at;
         }
       }
       
-      const { error: newsletterSubscriptionError } = await supabase
+      const { data: newsletterSubscriptionData, error: newsletterSubscriptionError } = await supabase
         .from('newsletter_subscriptions')
-        .upsert(subscriptionDataToUpsert, { onConflict: 'lead_id' });
-        
+        .upsert(subscriptionDataToUpsert, { onConflict: 'lead_id' })
+        .select('unsubscribe_token, is_newsletter_subscribed, is_marketing_subscribed')
+        .single();
+
       if (newsletterSubscriptionError) throw newsletterSubscriptionError;
+      if (!newsletterSubscriptionData) throw new Error('Failed to upsert newsletter subscription or retrieve its data.');
+
+      newsletterUnsubscribeToken = newsletterSubscriptionData.unsubscribe_token;
+      showUnsubscribeInfo = newsletterSubscriptionData.is_newsletter_subscribed || newsletterSubscriptionData.is_marketing_subscribed;
 
     } catch (dbError: any) {
       console.error('Database operation failed:', dbError);
@@ -302,9 +315,14 @@ Zespół Eurofins Polska
 Ta wiadomość została wysłana na adres ${email}. Jeśli to nie Ty wysłałeś(aś) to zgłoszenie, prosimy zignorować tę wiadomość.
 `;
 
-    if (showUnsubscribeInfo) {
+    if (showUnsubscribeInfo && newsletterUnsubscribeToken) {
+      const unsubscribeUrl = `https://raportbranzowy.pl/unsubscribe?token=${newsletterUnsubscribeToken}&type=marketing`;
       plainText += `
-Aby anulować subskrypcję, odwiedź https://raportbranzowy.pl/unsubscribe?email=${encodeURIComponent(email)}.
+Aby anulować subskrypcję, odwiedź ${unsubscribeUrl}.
+`;
+    } else if (showUnsubscribeInfo) {
+      plainText += `
+Informacje o zarządzaniu subskrypcją zostaną wysłane w osobnej wiadomości lub skontaktuj się z nami.
 `;
     }
 
@@ -323,8 +341,9 @@ NIP: 5792000046
       'X-Report-Abuse': 'abuse@raportbranzowy.pl',
     };
 
-    if (showUnsubscribeInfo) {
-      emailHeaders['List-Unsubscribe'] = `<https://raportbranzowy.pl/unsubscribe?email=${encodeURIComponent(email)}>, <mailto:unsubscribe@raportbranzowy.pl?subject=unsubscribe&body=Proszę%20o%20wypisanie%20mnie%20z%20newslettera%20dla%20adresu%20${encodeURIComponent(email)}>`;
+    if (showUnsubscribeInfo && newsletterUnsubscribeToken) {
+      const unsubscribeUrl = `https://raportbranzowy.pl/unsubscribe?token=${newsletterUnsubscribeToken}&type=marketing`;
+      emailHeaders['List-Unsubscribe'] = `<${unsubscribeUrl}>, <mailto:unsubscribe@raportbranzowy.pl?subject=unsubscribe&body=Proszę%20o%20wypisanie%20mnie%20z%20subskrypcji%20(token:${newsletterUnsubscribeToken})>`;
     }
     
     // Send email with Resend
@@ -354,8 +373,8 @@ NIP: 5792000046
           <table cellpadding="0" cellspacing="0" border="0" width="100%" style="max-width: 600px; margin: 0 auto; background-color: ${EUROFINS_WHITE};">
             <!-- Header with logo and brand color bar -->
             <tr>
-              <td style="background-color: ${EUROFINS_NAVY}; padding: 20px; text-align: center;">
-                <h1 style="color: ${EUROFINS_WHITE}; margin: 0; font-size: 24px;">Eurofins Polska</h1>
+              <td style="background-color: ${EUROFINS_WHITE}; padding: 20px; text-align: center;">
+                <img src="https://raportbranzowy.pl/logo.png" alt="Eurofins Polska Logo" style="max-width: 200px; height: auto; display: block; margin: 0 auto; border: none; background-color: ${EUROFINS_WHITE};">
               </td>
             </tr>
             
@@ -396,25 +415,23 @@ NIP: 5792000046
             <!-- Footer -->
             <tr>
               <td style="background-color: #f5f5f5; padding: 20px; text-align: center; border-top: 1px solid #ddd;">
-                <p style="color: #777; font-size: 12px; margin-bottom: 15px;">
+                <!--<p style="color: #777; font-size: 12px; margin-bottom: 15px;">
                   Ta wiadomość została wysłana na adres ${email}.<br/>
                   Jeśli to nie Ty wysłałeś(aś) to zgłoszenie, prosimy zignorować tę wiadomość.
                 </p>
-                
-                ${showUnsubscribeInfo ? `
-                <p style="color: #777; font-size: 12px; margin-bottom: 15px;">
-                  <a href="https://raportbranzowy.pl/unsubscribe?email=${encodeURIComponent(email)}" style="color: ${EUROFINS_NAVY}; text-decoration: underline;">Anuluj subskrypcję</a>
+                -->
+                <!--
+                ${showUnsubscribeInfo && newsletterUnsubscribeToken ? `
+                <p style="color: #777; font-size: 9; margin-bottom: 10px;">
+                  Zarządzaj swoimi preferencjami subskrypcji lub zrezygnuj z niej w dowolnym momencie.
                 </p>
-                ` : ''}
-                
-                <div style="border-top: 1px solid #ddd; padding-top: 15px; margin-top: 15px;">
-                  <p style="color: #777; font-size: 11px; margin: 0; line-height: 1.4;">
-                    <strong>Eurofins Polska Sp. z o.o.</strong><br/>
-                    Aleja Wojska Polskiego 90A<br/>
-                    82-200 Malbork<br/>
-                    NIP: 5792000046
-                  </p>
-                </div>
+                <p style="color: #777; font-size: 9px; margin: 0 0 15px 0;">
+                  Jeśli chcesz zrezygnować z subskrypcji, możesz to zrobić <a href="https://raportbranzowy.pl/unsubscribe?token=${newsletterUnsubscribeToken}&type=marketing" style="color: ${EUROFINS_ORANGE}; text-decoration: underline;">tutaj</a>.
+                </p>
+                ` : ''} -->
+                <p style="color: #777; font-size: 12px; margin: 0;">
+                  Eurofins Polska Sp. z o.o. | Aleja Wojska Polskiego 90A, 82-200 Malbork | NIP: 5792000046
+                </p>
               </td>
             </tr>
             

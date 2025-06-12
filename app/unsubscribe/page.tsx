@@ -4,37 +4,82 @@ import { useState, useEffect, FormEvent, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { CheckCircle2, AlertTriangle, Loader2 } from 'lucide-react';
 
+interface SubscriptionChoices {
+  newsletter: boolean; // true means user wants to unsubscribe from newsletter
+  marketing: boolean;  // true means user wants to unsubscribe from marketing
+}
 
 function UnsubscribeFormContent() {
   const searchParams = useSearchParams();
-  const [email, setEmail] = useState('');
+  const [token, setToken] = useState<string | null>(null);
+  const [subscriptionChoices, setSubscriptionChoices] = useState<SubscriptionChoices>({ 
+    newsletter: false, 
+    marketing: false 
+  });
   const [message, setMessage] = useState('');
   const [isError, setIsError] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [isSuccessfullyProcessed, setIsSuccessfullyProcessed] = useState(false);
 
   useEffect(() => {
-    const emailFromQuery = searchParams.get('email');
-    if (emailFromQuery) {
-      setEmail(emailFromQuery);
-      // Uncomment below to automatically submit if email is in query params
-      // handleSubmitInternal(emailFromQuery);
-    }
-  }, [searchParams]); // eslint-disable-line react-hooks/exhaustive-deps
-  // Added eslint-disable for handleSubmitInternal if it were used in auto-submit
+    const tokenFromQuery = searchParams.get('token');
+    const typeFromQuery = searchParams.get('type'); // 'marketing', 'newsletter', or 'all'
 
-  const handleSubmitInternal = async (currentEmail: string) => {
+    if (tokenFromQuery) {
+      setToken(tokenFromQuery);
+      let initialChoices: SubscriptionChoices = { newsletter: false, marketing: false };
+      if (typeFromQuery === 'marketing') {
+        initialChoices = { newsletter: false, marketing: true };
+      } else if (typeFromQuery === 'newsletter') {
+        initialChoices = { newsletter: true, marketing: false };
+      } else if (typeFromQuery === 'all') {
+        initialChoices = { newsletter: true, marketing: true };
+      } else {
+        // Default if no type or unknown type, assume they might want to unsubscribe from what they clicked, or both
+        // For safety and clarity, let's default to allowing them to choose, pre-selecting nothing or both.
+        // Pre-selecting both for unsubscription if type is unclear might be a common expectation.
+        initialChoices = { newsletter: true, marketing: true }; 
+      }
+      setSubscriptionChoices(initialChoices);
+    } else {
+      setMessage('Nieprawidłowy lub brakujący token. Proszę użyć linku z wiadomości e-mail.');
+      setIsError(true);
+      setIsSuccessfullyProcessed(true); // To hide form
+    }
+  }, [searchParams]);
+
+  const handleCheckboxChange = (type: keyof SubscriptionChoices) => {
+    setSubscriptionChoices(prev => ({ ...prev, [type]: !prev[type] }));
+  };
+
+  const handleUnsubscribe = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (!token) {
+      setMessage('Brak tokenu. Nie można przetworzyć żądania.');
+      setIsError(true);
+      return;
+    }
+
     setIsLoading(true);
     setMessage('');
     setIsError(false);
 
-    if (!currentEmail.trim() || !/\S+@\S+\.\S+/.test(currentEmail)) {
-      setMessage('Proszę podać prawidłowy adres email.');
-      setIsError(true);
+    let subscriptionTypeApi: string;
+    if (subscriptionChoices.newsletter && subscriptionChoices.marketing) {
+      subscriptionTypeApi = 'all';
+    } else if (subscriptionChoices.newsletter) {
+      subscriptionTypeApi = 'newsletter';
+    } else if (subscriptionChoices.marketing) {
+      subscriptionTypeApi = 'marketing';
+    } else {
+      setMessage('Nie wybrano żadnej opcji do rezygnacji. Twoje subskrypcje pozostają aktywne.');
+      setIsError(false); // Not an error, but an informational message
       setIsLoading(false);
+      setIsSuccessfullyProcessed(true); // Show message and hide form
       return;
     }
 
@@ -44,17 +89,17 @@ function UnsubscribeFormContent() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ email: currentEmail }),
+        body: JSON.stringify({ token, subscriptionType: subscriptionTypeApi }),
       });
 
       const data = await response.json();
 
       if (response.ok) {
-        setMessage(data.message || 'Pomyślnie wypisano z newslettera.');
+        setMessage(data.message || 'Pomyślnie zaktualizowano Twoje preferencje subskrypcji.');
         setIsError(false);
-        setEmail('');
+        setIsSuccessfullyProcessed(true);
       } else {
-        setMessage(data.error || 'Wystąpił błąd podczas wypisywania. Sprawdź email i spróbuj ponownie.');
+        setMessage(data.error || 'Wystąpił błąd podczas aktualizacji subskrypcji.');
         setIsError(true);
       }
     } catch (error) {
@@ -64,18 +109,15 @@ function UnsubscribeFormContent() {
     }
     setIsLoading(false);
   };
-
-  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    handleSubmitInternal(email);
-  };
+  
+  const noOptionsSelected = !subscriptionChoices.newsletter && !subscriptionChoices.marketing;
 
   return (
-    <div className="container mx-auto px-4 py-16 md:py-20 flex flex-col items-center justify-center flex-1">
+    <div className="container mx-auto px-4 py-16 md:py-20 flex flex-col items-center justify-center flex-1 min-h-screen">
       <div className="w-full max-w-md">
         <div className="bg-card text-card-foreground p-6 sm:p-8 rounded-xl shadow-xl border dark:border-gray-700">
           <h2 className="text-2xl sm:text-3xl font-bold text-center mb-6 text-primary">
-            Wypisz się z newslettera
+            Zarządzaj Subskrypcjami
           </h2>
 
           {message && (
@@ -87,27 +129,39 @@ function UnsubscribeFormContent() {
             </div>
           )}
 
-          {(!message || isError) && (
-            <form className="space-y-6" onSubmit={handleSubmit}>
-              <div>
-                <Label htmlFor="email" className="text-sm font-medium">
-                  Adres email
-                </Label>
-                <Input
-                  id="email"
-                  name="email"
-                  type="email"
-                  autoComplete="email"
-                  required
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="ty@example.com"
-                  disabled={isLoading}
-                  className="mt-1.5"
-                />
+          {!isSuccessfullyProcessed && token && (
+            <form className="space-y-6" onSubmit={handleUnsubscribe}>
+              <div className="space-y-4">
+                <p className="text-sm text-muted-foreground">
+                  Zaznacz poniżej, z których typów komunikacji chcesz zrezygnować.
+                </p>
+                <div className="flex items-center space-x-3 p-3 border rounded-md hover:bg-muted/50 transition-colors">
+                  <Checkbox 
+                    id="unsubscribeNewsletter"
+                    checked={subscriptionChoices.newsletter} 
+                    onCheckedChange={() => handleCheckboxChange('newsletter')}
+                    disabled={isLoading}
+                    aria-label="Zrezygnuj z newslettera"
+                  />
+                  <Label htmlFor="unsubscribeNewsletter" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 flex-1 cursor-pointer">
+                    Zrezygnuj z subskrypcji newslettera
+                  </Label>
+                </div>
+                <div className="flex items-center space-x-3 p-3 border rounded-md hover:bg-muted/50 transition-colors">
+                  <Checkbox 
+                    id="unsubscribeMarketing" 
+                    checked={subscriptionChoices.marketing} 
+                    onCheckedChange={() => handleCheckboxChange('marketing')}
+                    disabled={isLoading}
+                    aria-label="Zrezygnuj z komunikacji marketingowej"
+                  />
+                  <Label htmlFor="unsubscribeMarketing" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 flex-1 cursor-pointer">
+                    Zrezygnuj z komunikacji marketingowej (np. o nowych raportach)
+                  </Label>
+                </div>
               </div>
 
-              <div>
+              <div className="pt-2">
                 <Button
                   type="submit"
                   disabled={isLoading}
@@ -119,14 +173,14 @@ function UnsubscribeFormContent() {
                       Przetwarzanie...
                     </>
                   ) : (
-                    'Wypisz mnie'
+                     noOptionsSelected ? 'Potwierdź (pozostaję zapisany/a)' : 'Zatwierdź zmiany'
                   )}
                 </Button>
               </div>
             </form>
           )}
 
-          {message && !isError && (
+          {isSuccessfullyProcessed && (
              <div className="mt-8 text-center">
                 <Button variant="outline" asChild>
                   <Link href="/">
@@ -137,7 +191,7 @@ function UnsubscribeFormContent() {
           )}
         </div>
 
-        {(!message || isError) && (
+        {!isSuccessfullyProcessed && token && (
             <div className="mt-8 text-center">
                 <Link href="/" className="text-sm text-muted-foreground hover:text-primary hover:underline">
                   Anuluj i wróć na stronę główną
@@ -151,7 +205,7 @@ function UnsubscribeFormContent() {
 
 export default function UnsubscribePage() {
   return (
-    <Suspense fallback={<div className="flex h-screen w-full items-center justify-center"><Loader2 className="h-8 w-8 animate-spin text-primary" /></div>}>
+    <Suspense fallback={<div className="flex h-screen w-full items-center justify-center"><Loader2 className="h-8 w-8 animate-spin text-primary" /></div>}> 
       <UnsubscribeFormContent />
     </Suspense>
   );
