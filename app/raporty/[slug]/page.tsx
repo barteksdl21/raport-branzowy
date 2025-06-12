@@ -27,6 +27,9 @@ export async function generateMetadata(
   return {
     title: report.title + " | Eurofins Polska",
     description: report.description,
+    alternates: {
+      canonical: `https://raportbranzowy.pl/raporty/${report.slug}`,
+    },
   };
 }
 

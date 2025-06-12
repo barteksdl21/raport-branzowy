@@ -24,10 +24,9 @@ export const metadata: Metadata = {
     title: "Raporty Branżowe | Eurofins Polska",
     description: "Pobierz najnowsze raporty branżowe od Eurofins Polska. Kompleksowe analizy dla sektorów przemysłu spożywczego.",
   },
-  // Add canonical URL if not the root, or if you have specific needs
-  // alternates: {
-  //   canonical: 'https://raportbranzowy.pl',
-  // },
+  alternates: {
+    canonical: 'https://raportbranzowy.pl',
+  },
 };
 
 export default function Home() {
