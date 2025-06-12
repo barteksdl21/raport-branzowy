@@ -48,7 +48,7 @@ export function HeroSection() {
           >
             <div className="relative h-[400px] w-full overflow-hidden rounded-lg">
               <Image
-                src="/placeholder.svg?height=400&width=600"
+                src="/hero-2.jpeg"
                 alt="Raporty branżowe Eurofins"
                 fill
                 className="object-cover"

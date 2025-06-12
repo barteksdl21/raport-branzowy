@@ -67,7 +67,7 @@ const reports = [
       "Raport powstał w oparciu o badania przeprowadzone w laboratoriach Eurofins Polska, realizowane zgodnie z najwyższymi standardami jakości i rzetelności. Analizy obejmują szeroki zakres testów mikrobiologicznych, fizykochemicznych oraz sensorycznych, przeprowadzonych na próbkach produktów dostępnych na polskim rynku mleczarskim.",
     whyItMatters:
       "Raport stanowi cenne narzędzie dla producentów oraz dystrybutorów z branży mleczarskiej. Dostarcza szczegółowych danych, które pomagają lepiej zrozumieć aktualne trendy i wyzwania, opracować sposoby zarządzania zagrożeniami mikrobiologicznymi w środowisku produkcji oraz optymalizować ofertę produktową, tak by spełniała oczekiwania konsumentów i wymogi prawne.",
-    image: "/placeholder.svg?height=500&width=800",
+    image: "/mleko-header-2.jpeg",
     comingSoon: false,
     keyFindings: [
       "Badania mikrobiologiczne i fizykochemiczne",
