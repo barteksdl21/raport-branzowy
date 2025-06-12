@@ -62,7 +62,6 @@ export function BenefitsSection() {
             <Card
               key={index}
               className={`border-none shadow-md ${inView ? "animate-slide-up" : "opacity-0"}`}
-              style={{ animationDelay: `${0.1 * index}s` }}
             >
               <CardHeader className="pb-2">
                 {benefit.icon}

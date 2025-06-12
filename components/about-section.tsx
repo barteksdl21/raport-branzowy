@@ -19,7 +19,7 @@ export function AboutSection() {
           <div className={`relative ${inView ? "animate-slide-in-left" : "opacity-0"}`}>
             <div className="relative h-[500px] w-full overflow-hidden rounded-lg">
               <Image
-                src="/placeholder.svg?height=500&width=600"
+                src="/LP_627x500.jpg"
                 alt="Laboratorium Eurofins Polska"
                 fill
                 className="object-cover"

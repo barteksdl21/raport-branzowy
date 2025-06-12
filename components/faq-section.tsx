@@ -52,7 +52,6 @@ export function FaqSection() {
 
         <div
           className={`max-w-3xl mx-auto ${inView ? "animate-slide-up" : "opacity-0"}`}
-          style={{ animationDelay: "0.2s" }}
         >
           <Accordion type="single" collapsible className="w-full">
             {faqs.map((faq, index) => (
@@ -66,7 +65,6 @@ export function FaqSection() {
 
         <div
           className={`mt-10 text-center ${inView ? "animate-fade-in" : "opacity-0"}`}
-          style={{ animationDelay: "0.4s" }}
         >
           <p className="text-muted-foreground">Chcesz nawiązać współpracę? Skontaktuj się z nami:</p>
           <p className="font-medium text-primary mt-2"><a href="mailto:wyceny-oferta@eurofins.com">wyceny-oferta@eurofins.com</a> | +48 55 272 04 73</p>
