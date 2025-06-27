@@ -24,8 +24,7 @@ const FormContent = ({ defaultReport = "" }: FormSectionProps) => {
     email: "",
     company: "",
     report: defaultReport,
-    consent: false,
-    marketing: false,
+    consent: false
   })
 
   const [isSubmitted, setIsSubmitted] = useState(false)
@@ -128,15 +127,15 @@ const FormContent = ({ defaultReport = "" }: FormSectionProps) => {
             <div className="space-y-2">
               <div className="flex items-center">
                 <CheckCircle2 className="h-5 w-5 text-eurofins-orange mr-2" />
-                <span>Szczegółowe analizy laboratoryjne</span>
+                <span>Szczegółowe analizy danych</span>
               </div>
               <div className="flex items-center">
                 <CheckCircle2 className="h-5 w-5 text-eurofins-orange mr-2" />
-                <span>Trendy rynkowe i konsumenckie</span>
+                <span>Trendy rynkowe</span>
               </div>
               <div className="flex items-center">
                 <CheckCircle2 className="h-5 w-5 text-eurofins-orange mr-2" />
-                <span>Porównanie z normami europejskimi</span>
+                <span>Wnioski wynikające ze zmian w przepisach</span>
               </div>
               <div className="flex items-center">
                 <CheckCircle2 className="h-5 w-5 text-eurofins-orange mr-2" />
@@ -214,16 +213,7 @@ const FormContent = ({ defaultReport = "" }: FormSectionProps) => {
                     </Label>
                   </div>
 
-                  <div className="flex items-center space-x-2">
-                    <Checkbox
-                      id="marketing"
-                      checked={formState.marketing}
-                      onCheckedChange={(checked) => handleCheckboxChange("marketing", checked as boolean)}
-                    />
-                    <Label htmlFor="marketing" className="text-sm">
-                      Wyrażam zgodę na otrzymywanie informacji marketingowych od Eurofins Polska
-                    </Label>
-                  </div>
+
                 </div>
 
                 {submitError && (
@@ -255,7 +245,7 @@ const FormContent = ({ defaultReport = "" }: FormSectionProps) => {
                 </div>
                 <h3 className="text-2xl font-bold text-primary">Dziękujemy!</h3>
                 <p className="text-muted-foreground">
-                  Twój raport został wysłany na podany adres email. Sprawdź swoją skrzynkę odbiorczą.
+                  Twój raport został wysłany na podany adres email. Sprawdź swoją skrzynkę odbiorczą. Wiadomość może znajdować się w folderze SPAM.
                 </p>
                 <Button onClick={() => setIsSubmitted(false)} variant="outline" className="mt-4">
                   Pobierz inny raport

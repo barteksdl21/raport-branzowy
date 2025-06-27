@@ -16,14 +16,18 @@ export function AboutSection() {
     <section ref={ref} id="o-nas" className="w-full py-12 md:py-24 bg-white">
       <div className="container px-4 md:px-6">
         <div className="grid gap-6 lg:grid-cols-2 lg:gap-12 items-center">
-          <div className={`relative ${inView ? "animate-slide-in-left" : "opacity-0"}`}>
-            <div className="relative h-[500px] w-full overflow-hidden rounded-lg">
-              <Image
-                src="/LP_627x500.jpg"
-                alt="Laboratorium Eurofins Polska"
-                fill
-                className="object-cover"
-              />
+          <div className={`relative hidden lg:block ${inView ? "animate-slide-in-left" : "opacity-0"}`}>
+            <div className="relative w-full overflow-hidden rounded-lg" style={{ paddingBottom: '80%' /* 500/627 = ~0.8 */ }}>
+              <div className="absolute inset-0">
+                <Image
+                  src="/LP_627x500.jpg"
+                  alt="Laboratorium Eurofins Polska"
+                  fill
+                  className="object-cover"
+                  priority
+                  sizes="(max-width: 1024px) 0vw, 50vw"
+                />
+              </div>
             </div>
             <div className="absolute -bottom-6 -right-6 bg-white p-4 rounded-lg shadow-lg max-w-[200px]">
               <div className="text-4xl font-bold text-eurofins-orange">25+</div>

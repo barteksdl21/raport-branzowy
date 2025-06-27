@@ -72,7 +72,7 @@ export async function POST(request: Request) {
       company: rawCompany,
       report: rawReport,
       consent,
-      marketing,
+      marketing = false, // Default to false for marketing consent
       recaptchaToken // Added recaptchaToken
     } = rawBody;
 

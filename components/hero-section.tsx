@@ -24,7 +24,7 @@ export function HeroSection() {
               Raporty Branżowe 2025
             </div>
             <h1 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl lg:text-6xl text-white">
-              Profesjonalne analizy dla branży spożywczej
+            Eksperckie raporty i analizy dla rynku spożywczego
             </h1>
             <p className="max-w-[600px] text-white/90 md:text-xl">
               Uzyskaj dostęp do najnowszych raportów branżowych Eurofins Polska. Kompleksowe analizy laboratoryjne dla
