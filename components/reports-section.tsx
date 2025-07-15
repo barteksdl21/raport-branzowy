@@ -15,7 +15,7 @@ const reports = [
     slug: "raport-branzy-mleczarskiej",
     description:
       "Szczegółowe badania produktów mlecznych. Analiza jakości, bezpieczeństwa i innowacji w sektorze mleczarskim.",
-    image: "/okladka-mleko.webp",
+    image: "/Raport_Mleko_okladka.png",
     comingSoon: false,
   },
   {
@@ -24,7 +24,7 @@ const reports = [
     slug: "raport-branzy-miesnej",
     description:
       "Kompleksowa analiza rynku mięsnego w Polsce. Badania mikrobiologiczne, fizykochemiczne oraz szybkie i dokładne metody analityczne.",
-    image: "/okladka-mieso.webp",
+    image: "/Raport_Mieso_okladka.png",
     comingSoon: true,
   },
   {
@@ -32,7 +32,7 @@ const reports = [
     title: "Raport branży owocowo-warzywnej",
     slug: "raport-branzy-owocowo-warzywnej",
     description: "Diagnostyka chorób roślin, nowe kierunki zainteresowania w zakresie badań i skuteczne metody analityczne.",
-    image: "/placeholder.svg?height=200&width=300",
+    image: "/Raport_Owoce_i_warzywa_okladka.png",
     comingSoon: true,
   },
   {
@@ -41,7 +41,7 @@ const reports = [
     slug: "raport-branzy-rybnej",
     description:
       "Analiza jakości i bezpieczeństwa produktów rybnych. Badania na obecność metali ciężkich i mikroplastiku.",
-    image: "/placeholder.svg?height=200&width=300",
+    image: "/Raport_Ryby_okladka.png",
     comingSoon: true,
   },
 ]
