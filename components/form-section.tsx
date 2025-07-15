@@ -24,7 +24,9 @@ const FormContent = ({ defaultReport = "" }: FormSectionProps) => {
     email: "",
     company: "",
     report: defaultReport,
-    consent: false
+    privacyPolicy: false,
+    dataProcessing: false,
+    electronicServices: false
   })
 
   const [isSubmitted, setIsSubmitted] = useState(false)
@@ -200,20 +202,40 @@ const FormContent = ({ defaultReport = "" }: FormSectionProps) => {
                   </Select>
                 </div>
 
-                <div className="space-y-2">
-                  <div className="flex items-center space-x-2">
+                <div className="space-y-4">
+                  <div className="flex items-start space-x-2">
                     <Checkbox
-                      id="consent"
-                      checked={formState.consent}
-                      onCheckedChange={(checked) => handleCheckboxChange("consent", checked as boolean)}
+                      id="privacyPolicy"
+                      checked={formState.privacyPolicy}
+                      onCheckedChange={(checked) => handleCheckboxChange("privacyPolicy", checked as boolean)}
                       required
                     />
-                    <Label htmlFor="consent" className="text-sm">
-                      Wyrażam zgodę na przetwarzanie moich danych osobowych w celu otrzymania raportu *
+                    <Label htmlFor="privacyPolicy" className="text-sm leading-normal">
+                      Zapoznałem się i akceptuję politykę prywatności. *
                     </Label>
                   </div>
-
-
+                  <div className="flex items-start space-x-2">
+                    <Checkbox
+                      id="dataProcessing"
+                      checked={formState.dataProcessing}
+                      onCheckedChange={(checked) => handleCheckboxChange("dataProcessing", checked as boolean)}
+                      required
+                    />
+                    <Label htmlFor="dataProcessing" className="text-sm leading-normal">
+                      Zgadzam się na przetwarzanie moich danych osobowych przez podmioty należące do Sieci Laboratoriów Eurofins na potrzeby przesyłania mi informacji i materiałów handlowych, ofert oraz materiałów marketingowych w tym biuletynów handlowych i informacyjnych. *
+                    </Label>
+                  </div>
+                  <div className="flex items-start space-x-2">
+                    <Checkbox
+                      id="electronicServices"
+                      checked={formState.electronicServices}
+                      onCheckedChange={(checked) => handleCheckboxChange("electronicServices", checked as boolean)}
+                      required
+                    />
+                    <Label htmlFor="electronicServices" className="text-sm leading-normal">
+                      Zgadzam się na świadczenie usług drogą elektroniczną, co obejmuje również przesyłanie komunikatów, informacji i materiałów handlowych, marketingowych i promocyjnych w drodze komunikacji elektronicznej. *
+                    </Label>
+                  </div>
                 </div>
 
                 {submitError && (
