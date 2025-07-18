@@ -25,7 +25,7 @@ const reports = [
     description:
       "Kompleksowa analiza rynku mięsnego w Polsce. Badania mikrobiologiczne, fizykochemiczne oraz szybkie i dokładne metody analityczne.",
     image: "/Raport_Mieso_okladka.png",
-    comingSoon: true,
+    comingSoon: false,
   },
   {
     id: 3,
@@ -33,7 +33,7 @@ const reports = [
     slug: "raport-branzy-owocowo-warzywnej",
     description: "Diagnostyka chorób roślin, nowe kierunki zainteresowania w zakresie badań i skuteczne metody analityczne.",
     image: "/Raport_Owoce_i_warzywa_okladka.png",
-    comingSoon: true,
+    comingSoon: false,
   },
   {
     id: 4,

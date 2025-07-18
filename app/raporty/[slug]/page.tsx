@@ -40,23 +40,22 @@ const reports = [
     slug: "raport-branzy-miesnej",
     formValue: "meat",
     description:
-      "Kompleksowa analiza rynku mięsnego w Polsce. Badania mikrobiologiczne, fizykochemiczne oraz trendy konsumenckie.",
+      "Aktualne trendy rynkowe, najnowsze technologie i metody badawcze w sektorze mięsnym",
     longDescription:
-      "Nasz raport dotyczący branży mleczarskiej to kompleksowe źródło wiedzy na temat dostępnych rozwiązań i metod analitycznych, zapewniających bezpieczeństwo i jakość produktów. Zawiera szczegółową analizę wyników badań laboratoryjnych, obejmującą m.in. obecność drobnoustrojów, metali ciężkich oraz dodatków do żywności. Dodatkowo, raport prezentuje porównanie z obowiązującymi normami unijnymi oraz zawiera praktyczne rekomendacje dla producentów.",
+      "Raport Eurofins Polska dla branży mięsnej to dostarcza aktualnych informacji na temat dostępnych rozwiązań w zakresie kontroli jakości i bezpieczeństwa produktów mięsnych dostępnych na polskim rynku. Zawiera analizę wyników badań laboratoryjnych, w tym obecności drobnoustrojów, metali ciężkich oraz antybiotyków. Raport zawiera również komentarze do najważniejszych przepisów oraz regulacji prawnych obowiązujących producentów i dystrybutorów mięsa.",
     methodology:
-      "Badania mikrobiologiczne, fizykochemiczne oraz trendy konsumenckie.",
+      "Raport powstał w oparciu o badania przeprowadzone w laboratoriach Eurofins Polska w latach 2021-2024. Analizy obejmują szeroki zakres testów mikrobiologicznych, fizykochemicznych oraz sensorycznych, przeprowadzonych na próbkach produktów dostępnych na polskim rynku mięsnym.",
     whyItMatters:
-      "Raport dostarcza cennych informacji dla producentów, dystrybutorów oraz instytucji kontrolnych. Zawarte w nim dane pozwalają na lepsze zrozumienie rynku, identyfikację zagrożeń oraz dostosowanie produktów do oczekiwań konsumentów i wymogów prawnych.",
-    image: "/placeholder.svg?height=500&width=800",
+      "Zestawienie stanowi cenne narzędzie dla producentów oraz dystrybutorów z branży mięsnej. Dostarcza szczegółowych danych, które pomagają lepiej zrozumieć aktualne trendy i wyzwania, opracować sposoby zarządzania zagrożeniami mikrobiologicznymi w środowisku produkcji oraz optymalizować ofertę produktową, tak by spełniała oczekiwania konsumentów i wymogi prawne.",
+    image: "/LP_1370x325_mięso.jpg",
     comingSoon: false,
     keyFindings: [
       "Badania mikrobiologiczne i fizykochemiczne",
       "Ocena zgodności z normami UE",
-      "Trendy konsumenckie w branży mięsnej",
+      "Analiza pozostałości antybiotyków",
       "Rekomendacje dla producentów"
     ]
   },
-  // Example of another report with its own slug
   {
     id: 2,
     title: "Raport branży mleczarskiej",
@@ -65,12 +64,56 @@ const reports = [
     description:
       "Szczegółowe badania produktów mlecznych. Analiza jakości, bezpieczeństwa i innowacji w sektorze mleczarskim.",
     longDescription:
+      "Nasz raport dla branży mleczarskiej dostarcza aktualnych informacji na temat rozwiązań w zakresie kontroli jakości i bezpieczeństwa produktów mlecznych dostępnych na polskim rynku. Zawiera analizę wyników badań laboratoryjnych, w tym obecności drobnoustrojów, metali ciężkich oraz dodatków do żywności. Raport zawiera również komentarze do obowiązujących przepisów i regulacji prawnych.",
+    methodology:
+      "Raport powstał w oparciu o badania przeprowadzone w laboratoriach Eurofins Polska w latach 2023-2024. Analizy obejmują szeroki zakres testów mikrobiologicznych, fizykochemicznych oraz sensorycznych, przeprowadzonych na próbkach produktów dostępnych na polskim rynku mleczarskim.",
+    whyItMatters:
+      "Zestawienie stanowi cenne narzędzie dla producentów oraz dystrybutorów z branży mleczarskiej. Dostarcza szczegółowych danych, które pomagają lepiej zrozumieć aktualne trendy i wyzwania, opracować sposoby zarządzania zagrożeniami mikrobiologicznymi w środowisku produkcji oraz optymalizować ofertę produktową, tak by spełniała oczekiwania konsumentów i wymogi prawne.",
+    image: "/mleko-header-2.jpeg",
+    comingSoon: false,
+    keyFindings: [
+      "Badania mikrobiologiczne i fizykochemiczne",
+      "Ocena zgodności z normami UE",
+      "Zafałszowania produktów mlecznych",
+      "Rekomendacje dla producentów"
+    ]
+  },
+  {
+    id: 3,
+    title: "Raport branży owocowo-warzywnej",
+    slug: "raport-branzy-owocowo-warzywnej",
+    formValue: "fruits",
+    description:
+      "Aktualne trendy rynkowe, najnowsze technologie i zmiany prawne w sektorze owocowo-warzywnym",
+    longDescription:
+      "Raport Eurofins Polska dla branży owocowo-warzywnej dostarcza aktualnych informacji na temat dostępnych rozwiązań w zakresie kontroli jakości i bezpieczeństwa świeżych oraz przetworzonych produktów owocowych i warzywnych na polskim rynku. Zawiera analizę wyników badań laboratoryjnych, obejmujących m.in. obecność pozostałości pestycydów, metali ciężkich oraz patogenów. W raporcie znajdują się również komentarze do obowiązujących przepisów i norm dotyczących branży owocowo-warzywnej.",
+    methodology:
+      "Raport powstał w oparciu o badania przeprowadzone w laboratoriach Eurofins Polska w latach 2022-2024. Analizy obejmują szeroki zakres testów mikrobiologicznych, fizykochemicznych oraz w zakresie monitoringu środowiska produkcji, przeprowadzonych na próbkach świeżych i przetworzonych owoców i warzyw dostępnych na polskim rynku.",
+    whyItMatters:
+      "Zestawienie stanowi cenne narzędzie dla producentów oraz dystrybutorów z branży owocowo-warzywnej. Dostarcza szczegółowych danych, które pomagają lepiej zrozumieć aktualne trendy i wyzwania, identyfikować i zarządzać zagrożeniami związanymi z bezpieczeństwem produktów oraz pozostawać na bieżące ze zmianami prawnymi.",
+    image: "/LP_1370x325_owoce_i_warzywa.jpg",
+    comingSoon: false,
+    keyFindings: [
+      "Badania mikrobiologiczne i fizykochemiczne",
+      "Ocena zgodności z normami UE",
+      "Badania przechowalnicze – kontrola jakości i trwałości produktów",
+      "Rekomendacje dla producentów"
+    ]
+  },
+  {
+    id: 4,
+    title: "Raport branży rybnej",
+    slug: "raport-branzy-rybnej",
+    formValue: "seafood",
+    description:
+      "Szczegółowe badania produktów mlecznych. Analiza jakości, bezpieczeństwa i innowacji w sektorze mleczarskim.",
+    longDescription:
       "Nasz raport branży mleczarskiej dostarcza szczegółowych informacji na temat jakości i bezpieczeństwa produktów mlecznych dostępnych na polskim rynku. Zawiera analizę wyników badań laboratoryjnych, w tym obecności drobnoustrojów, metali ciężkich oraz dodatków do żywności. Raport zawiera również porównanie z normami unijnymi i rekomendacje dla producentów.",
     methodology:
       "Raport powstał w oparciu o badania przeprowadzone w laboratoriach Eurofins Polska, realizowane zgodnie z najwyższymi standardami jakości i rzetelności. Analizy obejmują szeroki zakres testów mikrobiologicznych, fizykochemicznych oraz sensorycznych, przeprowadzonych na próbkach produktów dostępnych na polskim rynku mleczarskim.",
     whyItMatters:
       "Raport stanowi cenne narzędzie dla producentów oraz dystrybutorów z branży mleczarskiej. Dostarcza szczegółowych danych, które pomagają lepiej zrozumieć aktualne trendy i wyzwania, opracować sposoby zarządzania zagrożeniami mikrobiologicznymi w środowisku produkcji oraz optymalizować ofertę produktową, tak by spełniała oczekiwania konsumentów i wymogi prawne.",
-    image: "/mleko-header-2.jpeg",
+    image: "/LP_1370x325_ryby.jpg",
     comingSoon: false,
     keyFindings: [
       "Badania mikrobiologiczne i fizykochemiczne",

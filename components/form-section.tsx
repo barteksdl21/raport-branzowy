@@ -196,8 +196,8 @@ const FormContent = ({ defaultReport = "" }: FormSectionProps) => {
                     <SelectContent>
                       <SelectItem value="dairy">Raport branży mleczarskiej</SelectItem>
                       <SelectItem value="meat">Raport branży mięsnej</SelectItem>
-                      {/* <SelectItem value="fruits">Raport branży owocowo-warzywnej</SelectItem>
-                      <SelectItem value="seafood">Raport branży rybnej</SelectItem> */}
+                      <SelectItem value="fruits">Raport branży owocowo-warzywnej</SelectItem>
+                      {/* <SelectItem value="seafood">Raport branży rybnej</SelectItem> */}
                     </SelectContent>
                   </Select>
                 </div>

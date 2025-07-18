@@ -46,7 +46,7 @@ export function HeroSection() {
           >
             <div className="relative aspect-[4/3] w-full overflow-hidden rounded-lg">
               <Image
-                src="/hero-2.jpeg"
+                src="/LP_627x400_1.jpg"
                 alt="Raporty branżowe Eurofins"
                 fill
                 className="object-cover"

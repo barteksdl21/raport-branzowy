@@ -314,18 +314,6 @@ Zespół Eurofins Polska
 ---
 Ta wiadomość została wysłana na adres ${email}. Jeśli to nie Ty wysłałeś(aś) to zgłoszenie, prosimy zignorować tę wiadomość.
 `;
-
-    if (showUnsubscribeInfo && newsletterUnsubscribeToken) {
-      const unsubscribeUrl = `https://raportbranzowy.pl/unsubscribe?token=${newsletterUnsubscribeToken}&type=marketing`;
-      plainText += `
-Aby anulować subskrypcję, odwiedź ${unsubscribeUrl}.
-`;
-    } else if (showUnsubscribeInfo) {
-      plainText += `
-Informacje o zarządzaniu subskrypcją zostaną wysłane w osobnej wiadomości lub skontaktuj się z nami.
-`;
-    }
-
     plainText += `
 ---
 Eurofins Polska Sp. z o.o.
@@ -415,20 +403,6 @@ NIP: 5792000046
             <!-- Footer -->
             <tr>
               <td style="background-color: #f5f5f5; padding: 20px; text-align: center; border-top: 1px solid #ddd;">
-                <!--<p style="color: #777; font-size: 12px; margin-bottom: 15px;">
-                  Ta wiadomość została wysłana na adres ${email}.<br/>
-                  Jeśli to nie Ty wysłałeś(aś) to zgłoszenie, prosimy zignorować tę wiadomość.
-                </p>
-                -->
-                <!--
-                ${showUnsubscribeInfo && newsletterUnsubscribeToken ? `
-                <p style="color: #777; font-size: 9; margin-bottom: 10px;">
-                  Zarządzaj swoimi preferencjami subskrypcji lub zrezygnuj z niej w dowolnym momencie.
-                </p>
-                <p style="color: #777; font-size: 9px; margin: 0 0 15px 0;">
-                  Jeśli chcesz zrezygnować z subskrypcji, możesz to zrobić <a href="https://raportbranzowy.pl/unsubscribe?token=${newsletterUnsubscribeToken}&type=marketing" style="color: ${EUROFINS_ORANGE}; text-decoration: underline;">tutaj</a>.
-                </p>
-                ` : ''} -->
                 <p style="color: #777; font-size: 12px; margin: 0;">
                   Eurofins Polska Sp. z o.o. | Aleja Wojska Polskiego 90A, 82-200 Malbork | NIP: 5792000046
                 </p>
