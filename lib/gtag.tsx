@@ -72,7 +72,7 @@ export const GoogleAnalytics = () => {
         </Script>
       )}
 
-      {/* GA_TRACKING_ID && !GTM_ID && */} (
+      {/* GA_TRACKING_ID && !GTM_ID && */} 
       {GA_TRACKING_ID && (
         <>
           <Script
