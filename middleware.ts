@@ -154,7 +154,7 @@ export async function middleware(request: NextRequest) {
   // --- 4. Security Headers ---
   const response = NextResponse.next();
 
-  let scriptSrc = "script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.google.com https://www.gstatic.com https://googletagmanager.com";
+  let scriptSrc = "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com https://www.google-analytics.com https://ssl.google-analytics.com https://www.google.com https://www.gstatic.com https://googletagmanager.com https://googlesyndication.com https://tpc.googlesyndication.com https://pagead2.googlesyndication.com";
   if (process.env.NODE_ENV === 'development') {
     scriptSrc += " 'unsafe-eval'";
   }
@@ -162,15 +162,15 @@ export async function middleware(request: NextRequest) {
   const cspDirectives = [
     "default-src 'self'",
     scriptSrc,
-    "style-src 'self' 'unsafe-inline' https://*.google.com https://www.gstatic.com https://googletagmanager.com",
-    "img-src 'self' data: https://*.public.blob.vercel-storage.com https://*.google.com https://www.gstatic.com https://googletagmanager.com",
-    "font-src 'self' data: https://*.google.com https://www.gstatic.com https://googletagmanager.com",
-    "connect-src 'self' https://vitals.vercel-insights.com https://*.google-analytics.com https://*.google.com https://*.supabase.co wss://*.supabase.co https://googletagmanager.com",
-    "frame-src 'self' https://www.google.com https://www.gstatic.com https://recaptcha.google.com https://googletagmanager.com",
-    "worker-src 'self' https://*.google.com https://www.gstatic.com https://googletagmanager.com",
+    "style-src 'self' 'unsafe-inline' https://*.google.com https://www.gstatic.com https://googletagmanager.com https://fonts.googleapis.com https://googlesyndication.com",
+    "img-src 'self' data: blob: https://*.public.blob.vercel-storage.com https://*.google.com https://*.google.pl https://google.pl https://www.gstatic.com https://googletagmanager.com https://*.google-analytics.com https://ssl.google-analytics.com https://googlesyndication.com https://tpc.googlesyndication.com https://pagead2.googlesyndication.com https://*.doubleclick.net https://*.googleadservices.com",
+    "font-src 'self' data: https://*.google.com https://www.gstatic.com https://googletagmanager.com https://fonts.gstatic.com https://fonts.googleapis.com",
+    "connect-src 'self' https://vitals.vercel-insights.com https://*.google-analytics.com https://ssl.google-analytics.com https://*.google.com https://*.supabase.co wss://*.supabase.co https://googletagmanager.com https://www.googletagmanager.com https://googlesyndication.com https://*.doubleclick.net https://stats.g.doubleclick.net https://www.google-analytics.com",
+    "frame-src 'self' https://www.google.com https://www.gstatic.com https://recaptcha.google.com https://googletagmanager.com https://googlesyndication.com https://tpc.googlesyndication.com https://pagead2.googlesyndication.com https://*.doubleclick.net",
+    "worker-src 'self' blob: https://*.google.com https://www.gstatic.com https://googletagmanager.com",
     "object-src 'none'",
     "frame-ancestors 'self' https://*.google.com https://googletagmanager.com",
-    "form-action 'self'",
+    "form-action 'self' https://googletagmanager.com",
     "upgrade-insecure-requests"
   ];
   response.headers.set('Content-Security-Policy', cspDirectives.join('; '));
