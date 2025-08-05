@@ -26,16 +26,14 @@ if (!supabaseUrl || !supabaseServiceRoleKey) {
 
 const supabase = createClient(supabaseUrl!, supabaseServiceRoleKey!);
 
-const ALLOWED_REPORTS = ['meat', 'dairy', 'fruits', 'seafood', 'grain', 'beverages'];
+const ALLOWED_REPORTS = ['meat', 'dairy', 'fruits', 'seafood'];
 
 // Placeholder for actual report URLs - replace with your real Vercel Blob URLs
 const REPORT_ATTACHMENT_URLS: Record<string, string> = {
-  meat: 'https://zj2d6vfvf7afuoiu.public.blob.vercel-storage.com/sample.pdf', // Replace with actual URL
-  dairy: 'https://zj2d6vfvf7afuoiu.public.blob.vercel-storage.com/sample.pdf', // Replace with actual URL
-  fruits: 'https://zj2d6vfvf7afuoiu.public.blob.vercel-storage.com/sample.pdf', // Replace with actual URL
+  meat: 'https://zj2d6vfvf7afuoiu.public.blob.vercel-storage.com/Raport%20Eurofins%20Polska%20dla%20bran%C5%BCy%20mi%C4%99snej%202025.pdf', // Replace with actual URL
+  dairy: 'https://zj2d6vfvf7afuoiu.public.blob.vercel-storage.com/Raport%20Eurofins%20Polska%20dla%20bran%C5%BCy%20mleczarskiej%202025.pdf', // Replace with actual URL
+  fruits: 'https://zj2d6vfvf7afuoiu.public.blob.vercel-storage.com/Raport%20Eurofins%20Polska%20dla%20bran%C5%BCy%20owocowo-warzywnej%202025.pdf', // Replace with actual URL
   seafood: 'https://zj2d6vfvf7afuoiu.public.blob.vercel-storage.com/sample.pdf', // Replace with actual URL
-  grain: 'https://zj2d6vfvf7afuoiu.public.blob.vercel-storage.com/sample.pdf', // Replace with actual URL
-  beverages: 'https://zj2d6vfvf7afuoiu.public.blob.vercel-storage.com/sample.pdf', // Replace with actual URL
 };
 
 const RECAPTCHA_V3_THRESHOLD = 0.5; // Adjust this threshold as needed
@@ -261,9 +259,7 @@ export async function POST(request: Request) {
       meat: 'Raport branży mięsnej',
       dairy: 'Raport branży mleczarskiej',
       fruits: 'Raport branży owocowo-warzywnej',
-      seafood: 'Raport branży rybnej',
-      grain: 'Raport branży zbożowej',
-      beverages: 'Raport branży napojów',
+      seafood: 'Raport branży rybnej'
     };
     const reportName = reportNames[report] || 'Raport branżowy';
 
@@ -420,7 +416,7 @@ NIP: 5792000046
       text: plainText,
       attachments: contentBuffer ? [
         {
-          filename: `${report}.pdf`,
+          filename: `${reportName} 2025 - Eurofins Polska.pdf`,
           content: contentBuffer,
         },
       ] : [],
