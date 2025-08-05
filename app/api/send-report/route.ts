@@ -139,9 +139,25 @@ export async function POST(request: Request) {
     const position = typeof rawPosition === 'string' ? rawPosition.trim() : ''; // <-- trim position
     const report = typeof rawReport === 'string' ? rawReport.trim() : '';
 
-    // Validate required fields
-    if (!firstName || !lastName || !email || !company || !position || !report || typeof consent !== 'boolean') {
-      return NextResponse.json({ error: 'Missing required fields. Please fill out all mandatory parts of the form.' }, { status: 400 });
+    // Validate required fields and collect missing ones
+    const missingFields: string[] = [];
+    if (!firstName) missingFields.push("Imię");
+    if (!lastName) missingFields.push("Nazwisko");
+    if (!email) missingFields.push("Email");
+    if (!company) missingFields.push("Nazwa firmy");
+    if (!position) missingFields.push("Stanowisko");
+    if (!report) missingFields.push("Raport");
+
+    if (missingFields.length > 0 || typeof consent !== 'boolean') {
+      let errorMsg = "Proszę uzupełnić wszystkie wymagane pola.";
+      if (missingFields.length > 0) {
+        if (missingFields.includes("Raport")) {
+          errorMsg = "Proszę wybrać raport, który chcesz otrzymać.";
+        } else {
+          errorMsg = `Brakuje następujących pól: ${missingFields.join(", ")}.`;
+        }
+      }
+      return NextResponse.json({ error: errorMsg }, { status: 400 });
     }
 
     // Validate report type against allowlist
@@ -151,7 +167,7 @@ export async function POST(request: Request) {
 
     // Consent for data processing to receive the report is mandatory as per form logic
     if (!consent) {
-        return NextResponse.json({ error: 'Processing consent is required to receive the report.' }, { status: 400 });
+        return NextResponse.json({ error: 'Aby otrzymać raport, musisz zaznaczyć wszystkie zgody.' }, { status: 400 });
     }
 
     // --- Database Operations ---
@@ -166,7 +182,7 @@ export async function POST(request: Request) {
             first_name: firstName,
             last_name: lastName,
             company: company,
-            position: position, // <-- save position to db
+            position: position,
           },
           {
             onConflict: 'email',
