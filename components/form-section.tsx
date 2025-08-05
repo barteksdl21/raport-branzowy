@@ -23,6 +23,7 @@ const FormContent = ({ defaultReport = "" }: FormSectionProps) => {
     lastName: "",
     email: "",
     company: "",
+    position: "",
     report: defaultReport,
     privacyPolicy: false,
     dataProcessing: false,
@@ -51,6 +52,18 @@ const FormContent = ({ defaultReport = "" }: FormSectionProps) => {
   const handleCheckboxChange = (name: string, checked: boolean) => {
     setFormState((prev) => ({ ...prev, [name]: checked }))
   }
+
+  // Helper for "Zaznacz wszystkie"
+  const allChecked = formState.privacyPolicy && formState.dataProcessing && formState.electronicServices;
+  const someChecked = formState.privacyPolicy || formState.dataProcessing || formState.electronicServices;
+  const handleCheckAll = (checked: boolean) => {
+    setFormState((prev) => ({
+      ...prev,
+      privacyPolicy: checked,
+      dataProcessing: checked,
+      electronicServices: checked,
+    }));
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -182,9 +195,15 @@ const FormContent = ({ defaultReport = "" }: FormSectionProps) => {
                   />
                 </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="company">Nazwa firmy *</Label>
-                  <Input id="company" name="company" required value={formState.company} onChange={handleChange} />
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="company">Nazwa firmy *</Label>
+                    <Input id="company" name="company" required value={formState.company} onChange={handleChange} />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="position">Stanowisko *</Label>
+                    <Input id="position" name="position" required value={formState.position} onChange={handleChange} />
+                  </div>
                 </div>
 
                 <div className="space-y-2">
@@ -203,6 +222,18 @@ const FormContent = ({ defaultReport = "" }: FormSectionProps) => {
                 </div>
 
                 <div className="space-y-4">
+                  {/* "Zaznacz wszystkie" checkbox */}
+                  <div className="flex items-start space-x-2">
+                    <Checkbox
+                      id="checkAll"
+                      checked={allChecked}
+                      indeterminate={someChecked && !allChecked}
+                      onCheckedChange={(checked) => handleCheckAll(!!checked)}
+                    />
+                    <Label htmlFor="checkAll" className="text-sm leading-normal font-semibold">
+                      Zaznacz wszystkie
+                    </Label>
+                  </div>
                   <div className="flex items-start space-x-2">
                     <Checkbox
                       id="privacyPolicy"

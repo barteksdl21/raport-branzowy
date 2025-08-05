@@ -68,10 +68,10 @@ export async function POST(request: Request) {
       lastName: rawLastName,
       email: rawEmail,
       company: rawCompany,
+      position: rawPosition, // <-- add position from form
       report: rawReport,
       consent = true,
-      marketing = false, // Default to false for marketing consent
-      recaptchaToken // Added recaptchaToken
+      recaptchaToken
     } = rawBody;
 
     // reCAPTCHA v3 Verification
@@ -136,10 +136,11 @@ export async function POST(request: Request) {
     const lastName = typeof rawLastName === 'string' ? rawLastName.trim() : '';
     const email = typeof rawEmail === 'string' ? rawEmail.trim() : '';
     const company = typeof rawCompany === 'string' ? rawCompany.trim() : '';
+    const position = typeof rawPosition === 'string' ? rawPosition.trim() : ''; // <-- trim position
     const report = typeof rawReport === 'string' ? rawReport.trim() : '';
 
     // Validate required fields
-    if (!firstName || !lastName || !email || !company || !report || typeof consent !== 'boolean') {
+    if (!firstName || !lastName || !email || !company || !position || !report || typeof consent !== 'boolean') {
       return NextResponse.json({ error: 'Missing required fields. Please fill out all mandatory parts of the form.' }, { status: 400 });
     }
 
@@ -155,18 +156,17 @@ export async function POST(request: Request) {
 
     // --- Database Operations ---
     let leadId: string;
-      let newsletterUnsubscribeToken: string | null = null;
-    let showUnsubscribeInfo: boolean = false; // Initialize in broader scope
     try {
       // 1. Upsert Lead (create if new email, update if existing)
       const { data: leadData, error: leadError } = await supabase
         .from('leads')
         .upsert(
           {
-            email: email.toLowerCase(), // Normalize email
-            first_name: firstName, // Already trimmed
-            last_name: lastName,   // Already trimmed
-            company: company,       // Already trimmed
+            email: email.toLowerCase(),
+            first_name: firstName,
+            last_name: lastName,
+            company: company,
+            position: position, // <-- save position to db
           },
           {
             onConflict: 'email',
@@ -189,59 +189,6 @@ export async function POST(request: Request) {
           processing_consent: consent, // Should be true based on prior check
         });
       if (reportDownloadError) throw reportDownloadError;
-
-      // 3. Upsert Newsletter Subscription
-      const { data: existingSubscription, error: fetchSubError } = await supabase
-        .from('newsletter_subscriptions')
-        .select('id, is_newsletter_subscribed, is_marketing_subscribed, subscribed_at, unsubscribed_at, unsubscribe_token') // Fetch new columns and token
-        .eq('lead_id', leadId)
-        .maybeSingle();
-
-      if (fetchSubError) throw fetchSubError;
-
-      // Determine if unsubscribe info should be shown in the email
-      // Show if they are opting in now OR if they were already subscribed
-      
-
-      const now = new Date().toISOString();
-      let subscriptionDataToUpsert: any = {
-        lead_id: leadId,
-        is_marketing_subscribed: true, // For report download context
-        is_newsletter_subscribed: !!marketing, // Based on newsletter checkbox
-        unsubscribed_at: null, // Active subscription for marketing or newsletter
-      };
-
-      if (marketing) { // User wants to be subscribed
-        if (!existingSubscription || !existingSubscription.is_newsletter_subscribed) { // Check against new column name
-          subscriptionDataToUpsert.subscribed_at = now;
-        } else {
-          subscriptionDataToUpsert.subscribed_at = existingSubscription.subscribed_at;
-        }
-        subscriptionDataToUpsert.unsubscribed_at = null;
-      } else { // User does not want to be subscribed to newsletter
-        // is_marketing_subscribed is true, so unsubscribed_at remains null for the record
-        // We only adjust newsletter specific fields if they are opting out of newsletter
-        if (existingSubscription && existingSubscription.is_newsletter_subscribed) {
-          // If they were subscribed to newsletter and now opt-out, keep marketing active
-          // The 'unsubscribed_at' for the whole record is null due to marketing consent
-        }
-        // Preserve existing subscribed_at if they were already subscribed to newsletter and are unchecking it now
-        if (existingSubscription?.subscribed_at) {
-          subscriptionDataToUpsert.subscribed_at = existingSubscription.subscribed_at;
-        }
-      }
-      
-      const { data: newsletterSubscriptionData, error: newsletterSubscriptionError } = await supabase
-        .from('newsletter_subscriptions')
-        .upsert(subscriptionDataToUpsert, { onConflict: 'lead_id' })
-        .select('unsubscribe_token, is_newsletter_subscribed, is_marketing_subscribed')
-        .single();
-
-      if (newsletterSubscriptionError) throw newsletterSubscriptionError;
-      if (!newsletterSubscriptionData) throw new Error('Failed to upsert newsletter subscription or retrieve its data.');
-
-      newsletterUnsubscribeToken = newsletterSubscriptionData.unsubscribe_token;
-      showUnsubscribeInfo = newsletterSubscriptionData.is_newsletter_subscribed || newsletterSubscriptionData.is_marketing_subscribed;
 
     } catch (dbError: any) {
       console.error('Database operation failed:', dbError);
@@ -294,29 +241,29 @@ export async function POST(request: Request) {
 
     // Create plaintext version of the email
     let plainText = `
-Dziękujemy za zainteresowanie naszym raportem!
+        Dziękujemy za zainteresowanie naszym raportem!
 
-Witaj ${firstName} ${lastName},
+        Witaj ${firstName} ${lastName},
 
-W załączniku znajdziesz swój raport: ${reportName}.
+        W załączniku znajdziesz swój raport: ${reportName}.
 
-Dziękujemy, że korzystasz z naszych usług. Mamy nadzieję, że nasz raport okaże się pomocny w Twojej działalności.
+        Dziękujemy, że korzystasz z naszych usług. Mamy nadzieję, że nasz raport okaże się pomocny w Twojej działalności.
 
-W razie pytań, jesteśmy do dyspozycji.
+        W razie pytań, jesteśmy do dyspozycji.
 
-Pozdrawiamy,
-Zespół Eurofins Polska
+        Pozdrawiamy,
+        Zespół Eurofins Polska
 
----
-Ta wiadomość została wysłana na adres ${email}. Jeśli to nie Ty wysłałeś(aś) to zgłoszenie, prosimy zignorować tę wiadomość.
-`;
-    plainText += `
----
-Eurofins Polska Sp. z o.o.
-Aleja Wojska Polskiego 90A
-82-200 Malbork
-NIP: 5792000046
-`;
+        ---
+        Ta wiadomość została wysłana na adres ${email}. Jeśli to nie Ty wysłałeś(aś) to zgłoszenie, prosimy zignorować tę wiadomość.
+        `;
+        plainText += `
+          ---
+          Eurofins Polska Sp. z o.o.
+          Aleja Wojska Polskiego 90A
+          82-200 Malbork
+          NIP: 5792000046
+          `;
 
     // Email headers
     const emailHeaders: Record<string, string> = {
@@ -325,11 +272,6 @@ NIP: 5792000046
       'X-Report-Abuse': 'abuse@raportbranzowy.pl',
     };
 
-    if (showUnsubscribeInfo && newsletterUnsubscribeToken) {
-      const unsubscribeUrl = `https://raportbranzowy.pl/unsubscribe?token=${newsletterUnsubscribeToken}&type=marketing`;
-      emailHeaders['List-Unsubscribe'] = `<${unsubscribeUrl}>, <mailto:unsubscribe@raportbranzowy.pl?subject=unsubscribe&body=Proszę%20o%20wypisanie%20mnie%20z%20subskrypcji%20(token:${newsletterUnsubscribeToken})>`;
-    }
-    
     // Send email with Resend
     const { data: resendData, error: resendError } = await resend.emails.send({
       from: 'Eurofins Polska <raporty@raportbranzowy.pl>',
