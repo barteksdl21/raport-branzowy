@@ -14,7 +14,7 @@ export function BenefitsSection() {
     {
       icon: <TrendingUp className="h-10 w-10 text-eurofins-orange" />,
       title: "Analiza trendów rynkowych",
-      description: "Poznaj aktualne trendy konsumenckie i rynkowe, które wpływają na Twoją branżę.",
+      description: "Poznaj aktualne trendy rynkowe, które wpływają na Twoją branżę.",
     },
     {
       icon: <ShieldCheck className="h-10 w-10 text-eurofins-orange" />,
