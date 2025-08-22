@@ -241,9 +241,9 @@ const FormContent = ({ defaultReport = "" }: FormSectionProps) => {
                       required
                     />
                     <Label htmlFor="dataProcessing" className="text-sm leading-normal">
-                    Przeczytałem(-am) i zrozumiałem(-am) politykę prywatności. Wyrażam zgodę na przetwarzanie moich danych osobowych przez podmioty należące do Sieci Laboratoriów Eurofins w celu przesyłania mi informacji i materiałów handlowych, ofert oraz materiałów marketingowych, w tym newsletterów handlowych i informacyjnych.
+                    Przeczytałem(-am) i zrozumiałem(-am) <a href="/polityka-prywatnosci" className="underline">politykę prywatności</a>. Wyrażam zgodę na przetwarzanie moich danych osobowych przez podmioty należące do Sieci Laboratoriów Eurofins w celu przesyłania mi informacji i materiałów handlowych, ofert oraz materiałów marketingowych, w tym newsletterów handlowych i informacyjnych.
  <br />
-Zaznaczając pole 'pobierz', wyrażam zgodę na świadczenie usług drogą elektroniczną, co obejmuje również przesyłanie wiadomości, informacji oraz materiałów handlowych, marketingowych i promocyjnych za pośrednictwem środków komunikacji elektronicznej.
+Zaznaczając pole 'pobierz', wyrażam zgodę na świadczenie usług drogą elektroniczną, co obejmuje również przesyłanie wiadomości, informacji oraz materiałów handlowych, marketingowych i promocyjnych za pośrednictwem środków komunikacji elektronicznej.*
   
                     </Label>
                   </div>
