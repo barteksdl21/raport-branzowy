@@ -222,18 +222,6 @@ const FormContent = ({ defaultReport = "" }: FormSectionProps) => {
                 </div>
 
                 <div className="space-y-4">
-                  {/* "Zaznacz wszystkie" checkbox */}
-                  <div className="flex items-start space-x-2">
-                    <Checkbox
-                      id="checkAll"
-                      checked={allChecked}
-                      indeterminate={someChecked && !allChecked}
-                      onCheckedChange={(checked) => handleCheckAll(!!checked)}
-                    />
-                    <Label htmlFor="checkAll" className="text-sm leading-normal font-semibold">
-                      Zaznacz wszystkie
-                    </Label>
-                  </div>
                   <div className="flex items-start space-x-2">
                     <Checkbox
                       id="privacyPolicy"
@@ -253,18 +241,10 @@ const FormContent = ({ defaultReport = "" }: FormSectionProps) => {
                       required
                     />
                     <Label htmlFor="dataProcessing" className="text-sm leading-normal">
-                      Zgadzam się na przetwarzanie moich danych osobowych przez podmioty należące do Sieci Laboratoriów Eurofins na potrzeby przesyłania mi informacji i materiałów handlowych, ofert oraz materiałów marketingowych w tym biuletynów handlowych i informacyjnych. *
-                    </Label>
-                  </div>
-                  <div className="flex items-start space-x-2">
-                    <Checkbox
-                      id="electronicServices"
-                      checked={formState.electronicServices}
-                      onCheckedChange={(checked) => handleCheckboxChange("electronicServices", checked as boolean)}
-                      required
-                    />
-                    <Label htmlFor="electronicServices" className="text-sm leading-normal">
-                      Zgadzam się na świadczenie usług drogą elektroniczną, co obejmuje również przesyłanie komunikatów, informacji i materiałów handlowych, marketingowych i promocyjnych w drodze komunikacji elektronicznej. *
+                    Przeczytałem(-am) i zrozumiałem(-am) politykę prywatności. Wyrażam zgodę na przetwarzanie moich danych osobowych przez podmioty należące do Sieci Laboratoriów Eurofins w celu przesyłania mi informacji i materiałów handlowych, ofert oraz materiałów marketingowych, w tym newsletterów handlowych i informacyjnych.
+ <br />
+Zaznaczając pole 'pobierz', wyrażam zgodę na świadczenie usług drogą elektroniczną, co obejmuje również przesyłanie wiadomości, informacji oraz materiałów handlowych, marketingowych i promocyjnych za pośrednictwem środków komunikacji elektronicznej.
+  
                     </Label>
                   </div>
                 </div>
