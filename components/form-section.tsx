@@ -243,47 +243,50 @@ const FormContent = ({ defaultReport = "" }: FormSectionProps) => {
                     <Label htmlFor="dataProcessing" className="text-sm leading-normal w-full">
                       <div className="w-full">
                         <div className="relative">
-                          {/* Main content container with gradient fade */}
-                          <div className={`relative ${!consentExpanded && "max-h-[1.8em] overflow-hidden"}`}>
+                          {/* Main content container with right-side fade and overlay button */}
+                          <div className={`relative ${!consentExpanded ? "max-h-[1.8em] overflow-hidden" : ""}`}>  
                             <div className="text-sm leading-normal">
                               Przeczytałem(-am) i zrozumiałem(-am){" "}
                               <a href="/polityka-prywatnosci" target="_blank" rel="noopener">
                                 politykę prywatności
                               </a>
                               . Wyrażam zgodę na przetwarzanie{!consentExpanded && "..."} {consentExpanded && " moich danych osobowych przez podmioty należące do Sieci Laboratoriów Eurofins w celu przesyłania mi informacji i materiałów handlowych, ofert oraz materiałów marketingowych, w tym newsletterów handlowych i informacyjnych."}
-                              
                               {consentExpanded && (
                                 <div className="mt-2 text-muted-foreground">
                                   Zaznaczając pole 'pobierz', wyrażam zgodę na świadczenie usług drogą elektroniczną, co obejmuje również przesyłanie wiadomości, informacji oraz materiałów handlowych, marketingowych i promocyjnych za pośrednictwem środków komunikacji elektronicznej.*
                                 </div>
                               )}
                             </div>
-                            
-                            {/* Gradient fade overlay */}
+                            {/* Right-side fade and overlay button when collapsed */}
                             {!consentExpanded && (
-                              <div className="absolute bottom-0 left-0 w-full h-8 bg-gradient-to-t from-white to-transparent" />
+                              <>
+                                <div className="pointer-events-none absolute right-0 top-0 h-full w-24 bg-gradient-to-l from-white via-white/80 to-transparent" />
+                                <button
+                                  type="button"
+                                  onClick={() => setConsentExpanded((s) => !s)}
+                                  className="absolute right-0 bottom-0 z-10 text-eurofins-orange underline text-sm transition-all duration-150 hover:text-eurofins-orange/80 px-2 py-0.5 bg-transparent"
+                                  aria-expanded={consentExpanded}
+                                  aria-controls="consent-details"
+                                  style={{
+                                    textShadow: "-4px 0px 8px rgb(255 255 255)",
+                                  }}
+                                >
+                                  rozwiń
+                                </button>
+                              </>
+                            )}
+                            {consentExpanded && (
+                              <button
+                                type="button"
+                                onClick={() => setConsentExpanded((s) => !s)}
+                                className="mt-1 text-eurofins-orange underline text-sm transition-all duration-150 hover:text-eurofins-orange/80"
+                                aria-expanded={consentExpanded}
+                                aria-controls="consent-details"
+                              >
+                                zwiń
+                              </button>
                             )}
                           </div>
-
-                          {/* Toggle button with improved backdrop */}
-                            <button
-                            type="button"
-                            onClick={() => setConsentExpanded((s) => !s)}
-                            className={`
-                              text-eurofins-orange underline text-sm transition-all duration-150 hover:text-eurofins-orange/80
-                              ${!consentExpanded 
-                              ? "absolute bottom-0 right-0 px-2 py-0.5 bg-white/95 backdrop-blur-sm shadow-[-4px_0_8px_4px_rgba(255,255,255,0.9)]" 
-                              : "mt-1"}
-                            `}
-                            aria-expanded={consentExpanded}
-                            aria-controls="consent-details"
-                            style={{
-                              textShadow: "-20px 0px 5px rgb(255 255 255)",
-                              background: "rgba(255, 255, 255, 0.7)"
-                            }}
-                            >
-                            {consentExpanded ? "zwiń" : "rozwiń"}
-                            </button>
                         </div>
                       </div>
                     </Label>
