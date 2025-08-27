@@ -244,7 +244,7 @@ const FormContent = ({ defaultReport = "" }: FormSectionProps) => {
                       <div className="w-full">
                         <div className="relative">
                           {/* Main content container with gradient fade */}
-                          <div className={`relative ${!consentExpanded ? "max-h-[1.8em] overflow-hidden pr-12" : ""}`}>
+                          <div className={`relative ${!consentExpanded ? "max-h-[1.8em] overflow-hidden" : ""}`} id="consent-details">
                             <div className="text-sm leading-normal">
                               Przeczytałem(-am) i zrozumiałem(-am){" "}
                               <a href="/polityka-prywatnosci" target="_blank" rel="noopener">
@@ -257,39 +257,22 @@ const FormContent = ({ defaultReport = "" }: FormSectionProps) => {
                                   Zaznaczając pole 'pobierz', wyrażam zgodę na świadczenie usług drogą elektroniczną, co obejmuje również przesyłanie wiadomości, informacji oraz materiałów handlowych, marketingowych i promocyjnych za pośrednictwem środków komunikacji elektronicznej.*
                                 </div>
                               )}
-                            </div>
 
-                            {/* Gradient fade overlay + collapse button placed inside the truncated container so it sits at the end of the visible text */}
-                            {!consentExpanded && (
-                              <>
-                                <div className="absolute bottom-0 left-0 w-full h-8 bg-gradient-to-t from-white to-transparent pointer-events-none" />
-                                <button
-                                  type="button"
-                                  onClick={() => setConsentExpanded((s: boolean) => !s)}
-                                  className="absolute bottom-0 right-0 px-2 py-0.5 bg-white/95 backdrop-blur-sm shadow-[-4px_0_8px_4px_rgba(255,255,255,0.9)] text-eurofins-orange underline text-sm transition-all duration-150 hover:text-eurofins-orange/80 z-10"
-                                  aria-expanded={consentExpanded}
-                                  aria-controls="consent-details"
-                                  style={{
-                                    textShadow: "-20px 0px 5px rgb(255 255 255)",
-                                    background: "rgba(255, 255, 255, 0.7)"
-                                  }}
-                                >
-                                  {"rozwiń ▾"}
-                                </button>
-                              </>
-                            )}
-
-                            {/* When expanded, show a normal inline button under the text */}
-                            {consentExpanded && (
-                              <button
-                                type="button"
-                                onClick={() => setConsentExpanded((s: boolean) => !s)}
-                                className="mt-1 text-eurofins-orange underline text-sm transition-all duration-150 hover:text-eurofins-orange/80"
+                              {/* Inline toggle link placed directly after the paragraph so it sits at the end of the text */}
+                              <a
+                                href="#"
+                                onClick={(e: React.MouseEvent<HTMLAnchorElement>) => { e.preventDefault(); setConsentExpanded((s: boolean) => !s); }}
+                                className="text-eurofins-orange underline text-sm transition-all duration-150 hover:text-eurofins-orange/80 relative z-10"
                                 aria-expanded={consentExpanded}
                                 aria-controls="consent-details"
                               >
-                                {"zwiń ▴"}
-                              </button>
+                                {consentExpanded ? "zwiń ▴" : "rozwiń ▾"}
+                              </a>
+                            </div>
+
+                            {/* Gradient fade hint when collapsed (non-interactive) */}
+                            {!consentExpanded && (
+                              <div className="absolute bottom-0 left-0 w-full h-8 bg-gradient-to-t from-white to-transparent pointer-events-none" />
                             )}
                           </div>
                         </div>
