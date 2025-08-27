@@ -1,8 +1,7 @@
 "use client"
 
 import type React from "react"
-
-import { useState } from "react"
+import { useState, HTMLAttributes } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -243,37 +242,43 @@ const FormContent = ({ defaultReport = "" }: FormSectionProps) => {
                     />
                     <Label htmlFor="dataProcessing" className="text-sm leading-normal w-full">
                       <div className="w-full">
-                        {/* single-line preview with truncate + inline toggle button */}
-                        <div className="flex items-center w-full">
-                          <span className="flex-1 min-w-0 text-sm leading-normal">
-                            <span className={!consentExpanded ? "block truncate" : "block"}>
+                        <div className="relative">
+                          {/* Main content container with gradient fade */}
+                          <div className={`relative ${!consentExpanded && "max-h-[4.5em] overflow-hidden"}`}>
+                            <div className="text-sm leading-normal">
                               Przeczytałem(-am) i zrozumiałem(-am){" "}
                               <a href="/polityka-prywatnosci" target="_blank" rel="noopener" className="underline">
                                 politykę prywatności
                               </a>
                               . Wyrażam zgodę na przetwarzanie moich danych osobowych przez podmioty należące do Sieci Laboratoriów Eurofins w celu przesyłania mi informacji i materiałów handlowych, ofert oraz materiałów marketingowych, w tym newsletterów handlowych i informacyjnych.
-                            </span>
-                          </span>
+                              
+                              {consentExpanded && (
+                                <div className="mt-2 text-muted-foreground">
+                                  Zaznaczając pole 'pobierz', wyrażam zgodę na świadczenie usług drogą elektroniczną, co obejmuje również przesyłanie wiadomości, informacji oraz materiałów handlowych, marketingowych i promocyjnych za pośrednictwem środków komunikacji elektronicznej.*
+                                </div>
+                              )}
+                            </div>
+                            
+                            {/* Gradient fade overlay */}
+                            {!consentExpanded && (
+                              <div className="absolute bottom-0 left-0 w-full h-8 bg-gradient-to-t from-white to-transparent" />
+                            )}
+                          </div>
+
+                          {/* Toggle button */}
                           <button
                             type="button"
                             onClick={() => setConsentExpanded((s) => !s)}
-                            className="ml-3 flex-shrink-0 text-eurofins-orange underline text-sm transition-colors duration-150"
+                            className={`
+                              text-eurofins-orange underline text-sm transition-colors duration-150 hover:text-eurofins-orange/80
+                              ${!consentExpanded ? "absolute bottom-0 right-0 bg-white pl-2" : "mt-1"}
+                            `}
                             aria-expanded={consentExpanded}
                             aria-controls="consent-details"
                           >
                             {consentExpanded ? "zwiń" : "rozwiń"}
                           </button>
                         </div>
-
-                        {/* expanded details (shown below the first line) */}
-                        {consentExpanded && (
-                          <div
-                            id="consent-details"
-                            className="mt-2 text-sm leading-normal text-muted-foreground transition-all duration-150"
-                          >
-                            Zaznaczając pole 'pobierz', wyrażam zgodę na świadczenie usług drogą elektroniczną, co obejmuje również przesyłanie wiadomości, informacji oraz materiałów handlowych, marketingowych i promocyjnych za pośrednictwem środków komunikacji elektronicznej.*
-                          </div>
-                        )}
                       </div>
                     </Label>
                   </div>
