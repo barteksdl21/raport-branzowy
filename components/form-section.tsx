@@ -241,26 +241,40 @@ const FormContent = ({ defaultReport = "" }: FormSectionProps) => {
                       onCheckedChange={(checked) => handleCheckboxChange("dataProcessing", checked as boolean)}
                       required
                     />
-                    <Label htmlFor="dataProcessing" className="text-sm leading-normal">
-                    <div className="flex items-center">
-                      <span className={!consentExpanded ? "inline-block w-[90%] truncate text-sm leading-normal" : "block text-sm leading-normal"}>
-                        Przeczytałem(-am) i zrozumiałem(-am) <a href="/polityka-prywatnosci" target="_blank" rel="noopener" className="underline">politykę prywatności</a>. Wyrażam zgodę na przetwarzanie moich danych osobowych przez podmioty należące do Sieci Laboratoriów Eurofins w celu przesyłania mi informacji i materiałów handlowych, ofert oraz materiałów marketingowych, w tym newsletterów handlowych i informacyjnych.
+                    <Label htmlFor="dataProcessing" className="text-sm leading-normal w-full">
+                      <div className="w-full">
+                        {/* single-line preview with truncate + inline toggle button */}
+                        <div className="flex items-center w-full">
+                          <span className="flex-1 min-w-0 text-sm leading-normal">
+                            <span className={!consentExpanded ? "block truncate" : "block"}>
+                              Przeczytałem(-am) i zrozumiałem(-am){" "}
+                              <a href="/polityka-prywatnosci" target="_blank" rel="noopener" className="underline">
+                                politykę prywatności
+                              </a>
+                              . Wyrażam zgodę na przetwarzanie moich danych osobowych przez podmioty należące do Sieci Laboratoriów Eurofins w celu przesyłania mi informacji i materiałów handlowych, ofert oraz materiałów marketingowych, w tym newsletterów handlowych i informacyjnych.
+                            </span>
+                          </span>
+                          <button
+                            type="button"
+                            onClick={() => setConsentExpanded((s) => !s)}
+                            className="ml-3 flex-shrink-0 text-eurofins-orange underline text-sm transition-colors duration-150"
+                            aria-expanded={consentExpanded}
+                            aria-controls="consent-details"
+                          >
+                            {consentExpanded ? "zwiń" : "rozwiń"}
+                          </button>
+                        </div>
+
+                        {/* expanded details (shown below the first line) */}
                         {consentExpanded && (
-                          <>
-                            <br />
+                          <div
+                            id="consent-details"
+                            className="mt-2 text-sm leading-normal text-muted-foreground transition-all duration-150"
+                          >
                             Zaznaczając pole 'pobierz', wyrażam zgodę na świadczenie usług drogą elektroniczną, co obejmuje również przesyłanie wiadomości, informacji oraz materiałów handlowych, marketingowych i promocyjnych za pośrednictwem środków komunikacji elektronicznej.*
-                          </>
+                          </div>
                         )}
-                      </span>
-                      <button
-                        type="button"
-                        onClick={() => setConsentExpanded((s) => !s)}
-                        className="ml-2 text-eurofins-orange underline text-sm"
-                        aria-expanded={consentExpanded}
-                      >
-                        {consentExpanded ? "zwiń" : "rozwiń"}
-                      </button>
-                    </div>
+                      </div>
                     </Label>
                   </div>
                 </div>
