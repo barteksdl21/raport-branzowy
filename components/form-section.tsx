@@ -250,7 +250,7 @@ const FormContent = ({ defaultReport = "" }: FormSectionProps) => {
                               <a href="/polityka-prywatnosci" target="_blank" rel="noopener">
                                 politykę prywatności
                               </a>
-                              . Wyrażam zgodę na{!consentExpanded && "..."} {consentExpanded && "przetwarzanie moich danych osobowych przez podmioty należące do Sieci Laboratoriów Eurofins w celu przesyłania mi informacji i materiałów handlowych, ofert oraz materiałów marketingowych, w tym newsletterów handlowych i informacyjnych."}
+                              . Wyrażam zgodę na przetwarzanie{!consentExpanded && "..."} {consentExpanded && " moich danych osobowych przez podmioty należące do Sieci Laboratoriów Eurofins w celu przesyłania mi informacji i materiałów handlowych, ofert oraz materiałów marketingowych, w tym newsletterów handlowych i informacyjnych."}
                               
                               {consentExpanded && (
                                 <div className="mt-2 text-muted-foreground">
@@ -277,6 +277,7 @@ const FormContent = ({ defaultReport = "" }: FormSectionProps) => {
                             `}
                             aria-expanded={consentExpanded}
                             aria-controls="consent-details"
+                            style="text-shadow: -20px 0px 5px rgb(255 255 255);background: rgba(255, 255, 255, 0.7);"
                           >
                             {consentExpanded ? "zwiń" : "rozwiń"}
                           </button>
