@@ -266,21 +266,24 @@ const FormContent = ({ defaultReport = "" }: FormSectionProps) => {
                           </div>
 
                           {/* Toggle button with improved backdrop */}
-                          <button
+                            <button
                             type="button"
                             onClick={() => setConsentExpanded((s) => !s)}
                             className={`
                               text-eurofins-orange underline text-sm transition-all duration-150 hover:text-eurofins-orange/80
                               ${!consentExpanded 
-                                ? "absolute bottom-0 right-0 px-2 py-0.5 bg-white/95 backdrop-blur-sm shadow-[-4px_0_8px_4px_rgba(255,255,255,0.9)]" 
-                                : "mt-1"}
+                              ? "absolute bottom-0 right-0 px-2 py-0.5 bg-white/95 backdrop-blur-sm shadow-[-4px_0_8px_4px_rgba(255,255,255,0.9)]" 
+                              : "mt-1"}
                             `}
                             aria-expanded={consentExpanded}
                             aria-controls="consent-details"
-                            style="text-shadow: -20px 0px 5px rgb(255 255 255);background: rgba(255, 255, 255, 0.7);"
-                          >
+                            style={{
+                              textShadow: "-20px 0px 5px rgb(255 255 255)",
+                              background: "rgba(255, 255, 255, 0.7)"
+                            }}
+                            >
                             {consentExpanded ? "zwiń" : "rozwiń"}
-                          </button>
+                            </button>
                         </div>
                       </div>
                     </Label>
