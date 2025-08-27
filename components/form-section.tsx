@@ -32,6 +32,7 @@ const FormContent = ({ defaultReport = "" }: FormSectionProps) => {
 
   const [isSubmitted, setIsSubmitted] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [consentExpanded, setConsentExpanded] = useState(false);
   const { executeRecaptcha } = useGoogleReCaptcha();
   const [submitError, setSubmitError] = useState<string | null>(null)
 
@@ -241,10 +242,25 @@ const FormContent = ({ defaultReport = "" }: FormSectionProps) => {
                       required
                     />
                     <Label htmlFor="dataProcessing" className="text-sm leading-normal">
-                    Przeczytałem(-am) i zrozumiałem(-am) <a href="/polityka-prywatnosci" className="underline">politykę prywatności</a>. Wyrażam zgodę na przetwarzanie moich danych osobowych przez podmioty należące do Sieci Laboratoriów Eurofins w celu przesyłania mi informacji i materiałów handlowych, ofert oraz materiałów marketingowych, w tym newsletterów handlowych i informacyjnych.
- <br />
-Zaznaczając pole 'pobierz', wyrażam zgodę na świadczenie usług drogą elektroniczną, co obejmuje również przesyłanie wiadomości, informacji oraz materiałów handlowych, marketingowych i promocyjnych za pośrednictwem środków komunikacji elektronicznej.*
-  
+                    <div className="flex items-center">
+                      <span className={!consentExpanded ? "inline-block w-[90%] truncate text-sm leading-normal" : "block text-sm leading-normal"}>
+                        Przeczytałem(-am) i zrozumiałem(-am) <a href="/polityka-prywatnosci" target="_blank" rel="noopener" className="underline">politykę prywatności</a>. Wyrażam zgodę na przetwarzanie moich danych osobowych przez podmioty należące do Sieci Laboratoriów Eurofins w celu przesyłania mi informacji i materiałów handlowych, ofert oraz materiałów marketingowych, w tym newsletterów handlowych i informacyjnych.
+                        {consentExpanded && (
+                          <>
+                            <br />
+                            Zaznaczając pole 'pobierz', wyrażam zgodę na świadczenie usług drogą elektroniczną, co obejmuje również przesyłanie wiadomości, informacji oraz materiałów handlowych, marketingowych i promocyjnych za pośrednictwem środków komunikacji elektronicznej.*
+                          </>
+                        )}
+                      </span>
+                      <button
+                        type="button"
+                        onClick={() => setConsentExpanded((s) => !s)}
+                        className="ml-2 text-eurofins-orange underline text-sm"
+                        aria-expanded={consentExpanded}
+                      >
+                        {consentExpanded ? "zwiń" : "rozwiń"}
+                      </button>
+                    </div>
                     </Label>
                   </div>
                 </div>
@@ -265,7 +281,7 @@ Zaznaczając pole 'pobierz', wyrażam zgodę na świadczenie usług drogą elekt
 
                 <p className="text-xs text-muted-foreground">
                   * Pola wymagane. Twoje dane są chronione zgodnie z naszą{" "}
-                  <a href="/polityka-prywatnosci" className="underline">
+                  <a href="/polityka-prywatnosci">
                     polityką prywatności
                   </a>
                   .
