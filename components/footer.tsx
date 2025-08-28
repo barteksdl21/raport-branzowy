@@ -39,17 +39,17 @@ export default function Footer() {
             <h3 className="text-lg font-bold">Raporty branżowe</h3>
             <ul className="space-y-2">
               <li>
-                <Link href="/#raporty" className="text-white/80 hover:text-eurofins-orange transition-colors">
+                <Link href="/raporty/raport-branzy-miesnej" className="text-white/80 hover:text-eurofins-orange transition-colors">
                   Branża mięsna
                 </Link>
               </li>
               <li>
-                <Link href="/#raporty" className="text-white/80 hover:text-eurofins-orange transition-colors">
+                <Link href="/raporty/raport-branzy-mleczarskiej" className="text-white/80 hover:text-eurofins-orange transition-colors">
                   Branża mleczarska
                 </Link>
               </li>
               <li>
-                <Link href="/#raporty" className="text-white/80 hover:text-eurofins-orange transition-colors">
+                <Link href="/raporty/raport-branzy-owocowo-warzywnej" className="text-white/80 hover:text-eurofins-orange transition-colors">
                   Branża owocowo-warzywna
                 </Link>
               </li>
@@ -64,6 +64,11 @@ export default function Footer() {
           <div className="space-y-4">
             <h3 className="text-lg font-bold">Przydatne linki</h3>
             <ul className="space-y-2">
+              <li>
+                <Link href="https://eftesty.pl/" target="_blank" className="text-white/80 hover:text-eurofins-orange transition-colors">
+                  Sklep Online
+                </Link>
+              </li>
               <li>
                 <Link href="/#o-nas" className="text-white/80 hover:text-eurofins-orange transition-colors">
                   O nas
