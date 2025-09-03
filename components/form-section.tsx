@@ -7,16 +7,17 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Checkbox } from "@/components/ui/checkbox"
+import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover"
 import { useInView } from "react-intersection-observer"
 import { CheckCircle2 } from "lucide-react";
 import { GoogleReCaptchaProvider, useGoogleReCaptcha } from 'react-google-recaptcha-v3';
 import { event as gaEvent } from '../lib/gtag';
 
 interface FormSectionProps {
-  defaultReport?: string;
+  defaultReport?: string[];
 }
 
-const FormContent = ({ defaultReport = "" }: FormSectionProps) => {
+const FormContent = ({ defaultReport = [] }: FormSectionProps) => {
   const [formState, setFormState] = useState({
     firstName: "",
     lastName: "",
@@ -64,6 +65,16 @@ const FormContent = ({ defaultReport = "" }: FormSectionProps) => {
       electronicServices: checked,
     }));
   };
+
+const handleReportChange = (value: string) => {
+  setFormState((prev) => ({
+    ...prev,
+    report: prev.report.includes(value)
+      ? prev.report.filter((v) => v !== value)
+      : [...prev.report, value],
+  }))
+}
+
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -129,6 +140,12 @@ const FormContent = ({ defaultReport = "" }: FormSectionProps) => {
       setIsSubmitting(false);
     }
   };
+
+const options = [
+  { value: "dairy", label: "Raport branży mleczarskiej" },
+  { value: "meat", label: "Raport branży mięsnej" },
+  { value: "fruits", label: "Raport branży owocowo-warzywnej" },
+];
 
   return (
     <section ref={ref} id="formularz" className="w-full py-12 md:py-24 bg-muted">
@@ -207,23 +224,31 @@ const FormContent = ({ defaultReport = "" }: FormSectionProps) => {
                 </div>
 
                 <div className="space-y-2">
+                  <Label>Wybierz raport *</Label>
                   <Popover>
-                    <PopoverTrigger className="border px-3 py-2 rounded">
-                      {formState.report.length > 0
-                        ? formState.report.join(", ")
-                        : "Wybierz raport"}
+                    <PopoverTrigger asChild>
+                      <Button
+                        variant="outline"
+                        className="w-full justify-between"
+                      >
+                        {formState.report.length > 0
+                          ? options
+                              .filter((o) => formState.report.includes(o.value))
+                              .map((o) => o.label)
+                              .join(", ")
+                          : "Wybierz raport"}
+                      </Button>
                     </PopoverTrigger>
-                    <PopoverContent className="p-2">
+                    <PopoverContent className="w-64 p-2">
                       {options.map((item) => (
-                        <label key={item.value} className="flex items-center gap-2">
-                          <input
-                            type="checkbox"
-                            value={item.value}
+                        <div key={item.value} className="flex items-center space-x-2 py-1">
+                          <Checkbox
+                            id={item.value}
                             checked={formState.report.includes(item.value)}
-                            onChange={handleCheckboxChange}
+                            onCheckedChange={() => handleReportChange(item.value)}
                           />
-                          {item.label}
-                        </label>
+                          <Label htmlFor={item.value}>{item.label}</Label>
+                        </div>
                       ))}
                     </PopoverContent>
                   </Popover>
