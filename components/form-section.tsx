@@ -185,23 +185,22 @@ const FormContent = ({ defaultReport = [] }: FormSectionProps) => {
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Label htmlFor="firstName">Imię *</Label>
+                    <Label htmlFor="firstName">Imię</Label>
                     <Input
                       id="firstName"
                       name="firstName"
-                      required
                       value={formState.firstName}
                       onChange={handleChange}
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="lastName">Nazwisko *</Label>
-                    <Input id="lastName" name="lastName" required value={formState.lastName} onChange={handleChange} />
+                    <Label htmlFor="lastName">Nazwisko</Label>
+                    <Input id="lastName" name="lastName" value={formState.lastName} onChange={handleChange} />
                   </div>
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="email">Email *</Label>
+                  <Label htmlFor="email">Email*</Label>
                   <Input
                     id="email"
                     name="email"
@@ -214,17 +213,17 @@ const FormContent = ({ defaultReport = [] }: FormSectionProps) => {
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Label htmlFor="company">Nazwa firmy *</Label>
+                    <Label htmlFor="company">Nazwa firmy*</Label>
                     <Input id="company" name="company" required value={formState.company} onChange={handleChange} />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="position">Stanowisko *</Label>
-                    <Input id="position" name="position" required value={formState.position} onChange={handleChange} />
+                    <Label htmlFor="position">Stanowisko</Label>
+                    <Input id="position" name="position" value={formState.position} onChange={handleChange} />
                   </div>
                 </div>
 
                 <div className="space-y-2">
-                  <Label>Wybierz raport *</Label>
+                  <Label>Wybierz raport*</Label>
                   <Popover>
                     <PopoverTrigger asChild>
                       <Button
@@ -277,7 +276,7 @@ const FormContent = ({ defaultReport = [] }: FormSectionProps) => {
                       required
                     />
                     <Label htmlFor="privacyPolicy" className="text-sm leading-normal">
-                      Zapoznałem się i akceptuję politykę prywatności. *
+                      Zapoznałem się i akceptuję politykę prywatności.*
                     </Label>
                   </div>
                   <div className="flex items-start space-x-2">
