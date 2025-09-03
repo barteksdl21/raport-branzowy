@@ -240,7 +240,7 @@ const FormContent = ({ defaultReport = [] }: FormSectionProps) => {
                       </Button>
                     </PopoverTrigger>
                     <PopoverContent
-                      className="w-[var(--radix-popover-trigger-width)] p-2"
+                      className="w-full p-2"
                       align="start"
                     >
                       {options.map((item) => (
