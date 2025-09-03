@@ -66,14 +66,14 @@ const FormContent = ({ defaultReport = [] }: FormSectionProps) => {
     }));
   };
 
-const handleReportChange = (value: string) => {
-  setFormState((prev) => ({
-    ...prev,
-    report: prev.report.includes(value)
-      ? prev.report.filter((v) => v !== value)
-      : [...prev.report, value],
-  }))
-}
+  const handleReportChange = (value: string) => {
+    setFormState((prev) => ({
+      ...prev,
+      report: prev.report.includes(value)
+        ? prev.report.filter((v) => v !== value)
+        : [...prev.report, value],
+    }))
+  }
 
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -141,11 +141,11 @@ const handleReportChange = (value: string) => {
     }
   };
 
-const options = [
-  { value: "dairy", label: "Raport branży mleczarskiej" },
-  { value: "meat", label: "Raport branży mięsnej" },
-  { value: "fruits", label: "Raport branży owocowo-warzywnej" },
-];
+  const options = [
+    { value: "dairy", label: "Raport branży mleczarskiej" },
+    { value: "meat", label: "Raport branży mięsnej" },
+    { value: "fruits", label: "Raport branży owocowo-warzywnej" },
+  ];
 
   return (
     <section ref={ref} id="formularz" className="w-full py-12 md:py-24 bg-muted">
@@ -239,7 +239,10 @@ const options = [
                           : "Wybierz raport"}
                       </Button>
                     </PopoverTrigger>
-                    <PopoverContent className="w-64 p-2">
+                    <PopoverContent
+                      className="w-[var(--radix-popover-trigger-width)] p-2"
+                      align="start"
+                    >
                       {options.map((item) => (
                         <div key={item.value} className="flex items-center space-x-2 py-1">
                           <Checkbox
