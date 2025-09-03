@@ -85,51 +85,51 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'reCAPTCHA token is missing.' }, { status: 400 });
     }
   
-    // try {
-    //   const verificationResponse = await fetch(
-    //     `https://www.google.com/recaptcha/api/siteverify`,
-    //     {
-    //       method: 'POST',
-    //       headers: {
-    //         'Content-Type': 'application/x-www-form-urlencoded',
-    //       },
-    //       body: `secret=${secretKey}&response=${recaptchaToken}`,
-    //     }
-    //   );
+    try {
+      const verificationResponse = await fetch(
+        `https://www.google.com/recaptcha/api/siteverify`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+          },
+          body: `secret=${secretKey}&response=${recaptchaToken}`,
+        }
+      );
 
-    //   const verificationData = await verificationResponse.json();
-    //   console.log('reCAPTCHA verification data:', verificationData); // Log for debugging
+      const verificationData = await verificationResponse.json();
+      console.log('reCAPTCHA verification data:', verificationData); // Log for debugging
 
-    //   // Determine expected hostname
-    //   // const requestUrl = new URL(request.url); // Moved to the top of POST function
-    //   const expectedHostname = requestUrl.hostname; // More reliable than req.headers.host in some environments
+      // Determine expected hostname
+      // const requestUrl = new URL(request.url); // Moved to the top of POST function
+      const expectedHostname = requestUrl.hostname; // More reliable than req.headers.host in some environments
 
-    //   if (!(
-    //     verificationData.success &&
-    //     verificationData.score >= RECAPTCHA_V3_THRESHOLD &&
-    //     verificationData.action === 'submit_form_raport_branzowy' && 
-    //     verificationData.hostname === expectedHostname
-    //   )) {
-    //     let errorMessage = 'reCAPTCHA verification failed.';
-    //     if (!verificationData.success) {
-    //         errorMessage = `reCAPTCHA check failed. Errors: ${verificationData['error-codes']?.join(', ')}`;
-    //     } else if (verificationData.action !== 'submit_form_raport_branzowy') {
-    //         errorMessage = `reCAPTCHA action mismatch. Expected 'submit_form_raport_branzowy', got '${verificationData.action}'`;
-    //     } else if (verificationData.hostname !== expectedHostname) {
-    //         errorMessage = `reCAPTCHA hostname mismatch. Expected '${expectedHostname}', got '${verificationData.hostname}'`;
-    //     } else if (verificationData.score < RECAPTCHA_V3_THRESHOLD) {
-    //         errorMessage = `reCAPTCHA score too low: ${verificationData.score}. Threshold: ${RECAPTCHA_V3_THRESHOLD}`;
-    //     }
-    //     console.error(errorMessage, verificationData);
-    //     return NextResponse.json({ error: errorMessage, details: verificationData['error-codes'] }, { status: 400 });
-    //   }
-    //   // reCAPTCHA verification successful
-    //   console.log('reCAPTCHA verification successful. Score:', verificationData.score);
+      if (!(
+        verificationData.success &&
+        verificationData.score >= RECAPTCHA_V3_THRESHOLD &&
+        verificationData.action === 'submit_form_raport_branzowy' && 
+        verificationData.hostname === expectedHostname
+      )) {
+        let errorMessage = 'reCAPTCHA verification failed.';
+        if (!verificationData.success) {
+            errorMessage = `reCAPTCHA check failed. Errors: ${verificationData['error-codes']?.join(', ')}`;
+        } else if (verificationData.action !== 'submit_form_raport_branzowy') {
+            errorMessage = `reCAPTCHA action mismatch. Expected 'submit_form_raport_branzowy', got '${verificationData.action}'`;
+        } else if (verificationData.hostname !== expectedHostname) {
+            errorMessage = `reCAPTCHA hostname mismatch. Expected '${expectedHostname}', got '${verificationData.hostname}'`;
+        } else if (verificationData.score < RECAPTCHA_V3_THRESHOLD) {
+            errorMessage = `reCAPTCHA score too low: ${verificationData.score}. Threshold: ${RECAPTCHA_V3_THRESHOLD}`;
+        }
+        console.error(errorMessage, verificationData);
+        return NextResponse.json({ error: errorMessage, details: verificationData['error-codes'] }, { status: 400 });
+      }
+      // reCAPTCHA verification successful
+      console.log('reCAPTCHA verification successful. Score:', verificationData.score);
 
-    // } catch (error) {
-    //   console.error('Server error during reCAPTCHA verification:', error);
-    //   return NextResponse.json({ error: 'Server error during reCAPTCHA verification.' }, { status: 500 });
-    // }
+    } catch (error) {
+      console.error('Server error during reCAPTCHA verification:', error);
+      return NextResponse.json({ error: 'Server error during reCAPTCHA verification.' }, { status: 500 });
+    }
 
     // Trim string inputs
     const firstName = typeof rawFirstName === 'string' ? rawFirstName.trim() : '';
@@ -285,12 +285,12 @@ export async function POST(request: Request) {
         );
       }
     }
-
+    const fullName = [firstName, lastName].filter(Boolean).join(" ");
     // Create plaintext version of the email
     let plainText = `
         Dziękujemy za zainteresowanie naszym raportem!
 
-        Witaj ${firstName} ${lastName},
+        Witaj${fullName ? " " + fullName : ""}
         W załączniku znajdziesz raport:
           ${selectedReportNames
             .map(
@@ -364,7 +364,9 @@ export async function POST(request: Request) {
               <td style="padding: 30px 20px;">
                 <h2 style="color: ${EUROFINS_NAVY}; margin-top: 0;">Dziękujemy za zainteresowanie naszym raportem!</h2>
                 
-                <p style="color: #333; line-height: 1.5;">Witaj <strong>${firstName} ${lastName}</strong>,</p>
+                <p style="color: #333; line-height: 1.5;">
+                  Witaj<strong>${fullName ? " " + fullName : ""}</strong>,
+                </p>
                 
                 <p style="color: #333; line-height: 1.5;">W załączniku znajdziesz raporty:</p>
                 
