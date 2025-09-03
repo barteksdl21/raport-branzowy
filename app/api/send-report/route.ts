@@ -68,7 +68,7 @@ export async function POST(request: Request) {
       lastName: rawLastName,
       email: rawEmail,
       company: rawCompany,
-      position: rawPosition, // <-- add position from form
+      position: rawPosition,
       report: rawReport,
       consent = true,
       recaptchaToken
@@ -137,7 +137,11 @@ export async function POST(request: Request) {
     const email = typeof rawEmail === 'string' ? rawEmail.trim() : '';
     const company = typeof rawCompany === 'string' ? rawCompany.trim() : '';
     const position = typeof rawPosition === 'string' ? rawPosition.trim() : ''; // <-- trim position
-    const report = typeof rawReport === 'string' ? rawReport.trim() : '';
+    const reports: string[] = Array.isArray(rawReport)
+      ? rawReport.map(r => r.trim()).filter(Boolean)
+      : typeof rawReport === "string" && rawReport.trim() !== ""
+        ? [rawReport.trim()]
+        : [];
 
     // Validate required fields and collect missing ones
     const missingFields: string[] = [];
@@ -161,8 +165,13 @@ export async function POST(request: Request) {
     }
 
     // Validate report type against allowlist
-    if (!ALLOWED_REPORTS.includes(report)) {
-      return NextResponse.json({ error: 'Invalid report type specified.' }, { status: 400 });
+    const invalidReports = reports.filter(r => !ALLOWED_REPORTS.includes(r));
+
+    if (invalidReports.length > 0) {
+      return NextResponse.json(
+        { error: `Invalid report type(s): ${invalidReports.join(", ")}` },
+        { status: 400 }
+      );
     }
 
     // Consent for data processing to receive the report is mandatory as per form logic
@@ -175,20 +184,19 @@ export async function POST(request: Request) {
     try {
       // 1. Upsert Lead (create if new email, update if existing)
       const { data: leadData, error: leadError } = await supabase
-        .from('leads')
+        .from("leads")
         .upsert(
           {
             email: email.toLowerCase(),
             first_name: firstName,
             last_name: lastName,
-            company: company,
-            position: position,
+            company,
+            position,
+            report: reports, // now an array
           },
-          {
-            onConflict: 'email',
-          }
+          { onConflict: "email" }
         )
-        .select('id')
+        .select("id")
         .single();
 
       if (leadError) throw leadError;
@@ -197,14 +205,19 @@ export async function POST(request: Request) {
       
 
       // 2. Insert Report Download
-      const { error: reportDownloadError } = await supabase
-        .from('report_downloads')
-        .insert({
-          lead_id: leadId,
-          report_type: report,
-          processing_consent: consent, // Should be true based on prior check
-        });
-      if (reportDownloadError) throw reportDownloadError;
+      if (reports.length > 0) {
+        const { error: reportDownloadError } = await supabase
+          .from("report_downloads")
+          .insert(
+            reports.map((r) => ({
+              lead_id: leadId,
+              report_type: r,
+              processing_consent: consent, // Should be true based on prior check
+            }))
+          );
+
+        if (reportDownloadError) throw reportDownloadError;
+      }
 
     } catch (dbError: any) {
       console.error('Database operation failed:', dbError);
@@ -224,35 +237,54 @@ export async function POST(request: Request) {
       fruits: 'Raport branży owocowo-warzywnej',
       seafood: 'Raport branży rybnej'
     };
-    const reportName = reportNames[report] || 'Raport branżowy';
 
-    // Fetch attachment from Vercel Blob based on validated report type
-    const attachmentUrl = REPORT_ATTACHMENT_URLS[report];
-    if (!attachmentUrl) {
-      console.error(`Configuration error: No attachment URL found for report type '${report}'.`);
-      return NextResponse.json({ error: 'Failed to prepare report due to a server configuration issue.' }, { status: 500 });
-    }
-    let contentBuffer;
-    try {
-      const blobResponse = await fetch(attachmentUrl, {
-        headers: {
-          'Authorization': `Bearer ${process.env.BLOB_READ_WRITE_TOKEN}`,
-        },
-      });
+    // Build a display string for the email body
+    const selectedReportNames = reports.map(r => reportNames[r] || 'Raport branżowy');
 
-      if (!blobResponse.ok) {
-        const errorText = await blobResponse.text();
-        console.error(`Error fetching attachment from Vercel Blob: ${blobResponse.status} ${blobResponse.statusText}`, errorText);
-        throw new Error(`Failed to fetch attachment: ${blobResponse.statusText}`);
+    // Prepare attachments array
+    const attachments: { filename: string; content: Buffer }[] = [];
+
+    for (const r of reports) {
+      const attachmentUrl = REPORT_ATTACHMENT_URLS[r];
+      if (!attachmentUrl) {
+        console.error(`Configuration error: No attachment URL found for report type '${r}'.`);
+        return NextResponse.json(
+          { error: `Failed to prepare report '${r}' due to a server configuration issue.` },
+          { status: 500 }
+        );
       }
-      const arrayBuffer = await blobResponse.arrayBuffer();
-      contentBuffer = Buffer.from(arrayBuffer);
-    } catch (fetchError: any) {
-      console.error('Error preparing attachment:', fetchError);
-      return NextResponse.json(
-        { error: 'Failed to prepare report for email. Please try again.' }, // Generic message for client
-        { status: 500 }
-      );
+
+      try {
+        const blobResponse = await fetch(attachmentUrl, {
+          headers: {
+            'Authorization': `Bearer ${process.env.BLOB_READ_WRITE_TOKEN}`,
+          },
+        });
+
+        if (!blobResponse.ok) {
+          const errorText = await blobResponse.text();
+          console.error(
+            `Error fetching attachment from Vercel Blob: ${blobResponse.status} ${blobResponse.statusText}`,
+            errorText
+          );
+          throw new Error(`Failed to fetch attachment: ${blobResponse.statusText}`);
+        }
+
+        const arrayBuffer = await blobResponse.arrayBuffer();
+        const contentBuffer = Buffer.from(arrayBuffer);
+
+        // Push into attachments array
+        attachments.push({
+          filename: `${reportNames[r] || r}.pdf`,
+          content: contentBuffer
+        });
+      } catch (fetchError: any) {
+        console.error(`Error preparing attachment for ${r}:`, fetchError);
+        return NextResponse.json(
+          { error: 'Failed to prepare one or more reports for email. Please try again.' },
+          { status: 500 }
+        );
+      }
     }
 
     // Create plaintext version of the email
@@ -260,9 +292,12 @@ export async function POST(request: Request) {
         Dziękujemy za zainteresowanie naszym raportem!
 
         Witaj ${firstName} ${lastName},
-
-        W załączniku znajdziesz swój raport: ${reportName}.
-
+        W załączniku znajdziesz raport:
+          ${selectedReportNames
+            .map(
+              (name) => `${name}`
+            )
+            .join(', ')}
         Dziękujemy, że korzystasz z naszych usług. Mamy nadzieję, że nasz raport okaże się pomocny w Twojej działalności.
 
         W razie pytań, jesteśmy do dyspozycji.
@@ -283,8 +318,8 @@ export async function POST(request: Request) {
 
     // Email headers
     const emailHeaders: Record<string, string> = {
-      'X-Entity-Ref-ID': `report-${report}-${Date.now()}`,
-      'X-Report-Type': report,
+      'X-Entity-Ref-ID': `reports-${reports.join('-')}-${Date.now()}`,
+      'X-Report-Type': reports.join(','),
       'X-Report-Abuse': 'abuse@raportbranzowy.pl',
     };
 
@@ -292,7 +327,7 @@ export async function POST(request: Request) {
     const { data: resendData, error: resendError } = await resend.emails.send({
       from: 'Eurofins Polska <raporty@raportbranzowy.pl>',
       to: email,
-      subject: `${reportName} - Eurofins Polska`,
+      subject: `Raport branżowy - Eurofins Polska`,
       headers: emailHeaders,
       replyTo: 'wyceny-oferta@eurofins.com',
       html: `
@@ -332,10 +367,14 @@ export async function POST(request: Request) {
                 
                 <p style="color: #333; line-height: 1.5;">Witaj <strong>${firstName} ${lastName}</strong>,</p>
                 
-                <p style="color: #333; line-height: 1.5;">W załączniku znajdziesz swój raport:</p>
+                <p style="color: #333; line-height: 1.5;">W załączniku znajdziesz raporty:</p>
                 
                 <div style="background-color: #f5f5f5; border-left: 4px solid ${EUROFINS_ORANGE}; padding: 15px; margin: 20px 0;">
-                  <h3 style="color: ${EUROFINS_NAVY}; margin: 0;">${reportName}</h3>
+                  ${selectedReportNames
+                    .map(
+                      (name) => `<h3 style="color: ${EUROFINS_NAVY}; margin: 0;">${name}</h3>`
+                    )
+                    .join('')}
                 </div>
                 
                 <p style="color: #333; line-height: 1.5;">Dziękujemy, że korzystasz z naszych usług. Mamy nadzieję, że nasz raport okaże się pomocny w Twojej działalności.</p>
@@ -372,12 +411,10 @@ export async function POST(request: Request) {
         </html>
       `,
       text: plainText,
-      attachments: contentBuffer ? [
-        {
-          filename: `${reportName} 2025 - Eurofins Polska.pdf`,
-          content: contentBuffer,
-        },
-      ] : [],
+      attachments: attachments.map((a) => ({
+        filename: a.filename,
+        content: a.content,
+      })),
     });
 
     if (resendError) {
