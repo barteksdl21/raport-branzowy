@@ -207,18 +207,26 @@ const FormContent = ({ defaultReport = "" }: FormSectionProps) => {
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="report">Wybierz raport *</Label>
-                  <Select value={formState.report} onValueChange={handleSelectChange} required>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Wybierz raport" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="dairy">Raport branży mleczarskiej</SelectItem>
-                      <SelectItem value="meat">Raport branży mięsnej</SelectItem>
-                      <SelectItem value="fruits">Raport branży owocowo-warzywnej</SelectItem>
-                      {/* <SelectItem value="seafood">Raport branży rybnej</SelectItem> */}
-                    </SelectContent>
-                  </Select>
+                  <Popover>
+                    <PopoverTrigger className="border px-3 py-2 rounded">
+                      {formState.report.length > 0
+                        ? formState.report.join(", ")
+                        : "Wybierz raport"}
+                    </PopoverTrigger>
+                    <PopoverContent className="p-2">
+                      {options.map((item) => (
+                        <label key={item.value} className="flex items-center gap-2">
+                          <input
+                            type="checkbox"
+                            value={item.value}
+                            checked={formState.report.includes(item.value)}
+                            onChange={handleCheckboxChange}
+                          />
+                          {item.label}
+                        </label>
+                      ))}
+                    </PopoverContent>
+                  </Popover>
                 </div>
 
                 <div className="space-y-4">

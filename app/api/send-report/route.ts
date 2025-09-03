@@ -382,8 +382,7 @@ export async function POST(request: Request) {
 
     if (resendError) {
       console.error('Error sending email:', resendError);
-      // Note: DB operations were successful, but email failed.
-      // Consider how to handle this state. For now, return email error.
+
       return NextResponse.json(
         { error: 'Failed to send email. Your submission was recorded. Please contact support if you do not receive your report.' }, // Generic message for client
         { status: 500 }
