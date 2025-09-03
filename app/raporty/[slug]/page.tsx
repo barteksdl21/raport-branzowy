@@ -208,9 +208,7 @@ export default async function ReportDetailPage({ params: paramsPromise }: { para
         </div>
       </section>
 
-  
-      {/* Form section - full width distinct section */}
-      <FormSection defaultReport={report.formValue} />
+      <FormSection defaultReport={report.formValue ? [report.formValue] : []} />
     </div>
   )
 }
