@@ -229,13 +229,24 @@ const FormContent = ({ defaultReport = [] }: FormSectionProps) => {
                     <PopoverTrigger asChild>
                       <Button
                         variant="outline"
-                        className="w-full justify-between"
+                        className="w-full justify-between truncate"
                       >
                         {formState.report.length > 0
-                          ? options
-                              .filter((o) => formState.report.includes(o.value))
-                              .map((o) => o.label)
-                              .join(", ")
+                          ? (() => {
+                              const selectedLabels = options
+                                .filter((o) => formState.report.includes(o.value))
+                                .map((o) => o.label);
+
+                              const joined = selectedLabels.join(", ");
+
+                              // If more than one selected, shorten and add count
+                              if (selectedLabels.length > 1) {
+                                return `${selectedLabels.length} raporty`;
+                              }
+
+                              // Only one selected — just show it
+                              return joined;
+                            })()
                           : "Wybierz raport"}
                       </Button>
                     </PopoverTrigger>
