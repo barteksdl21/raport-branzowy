@@ -96,7 +96,10 @@ async function applyRateLimit(
 // --- Middleware Logic ---
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
-  const ip = request.ip ?? '127.0.0.1';
+  const forwardedFor = request.headers.get('x-forwarded-for');
+  const ip = forwardedFor
+    ? forwardedFor.split(',')[0].trim()
+    : request.ip || '127.0.0.1';
   const userAgent = request.headers.get('user-agent') ?? '';
 
   // --- 1. Basic Bot Detection (User-Agent based) ---
