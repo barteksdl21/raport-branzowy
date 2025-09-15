@@ -23,7 +23,6 @@ const FormContent = ({ defaultReport = [] }: FormSectionProps) => {
     lastName: "",
     email: "",
     company: "",
-    position: "",
     report: defaultReport,
     privacyPolicy: false,
     dataProcessing: false,
@@ -211,16 +210,10 @@ const FormContent = ({ defaultReport = [] }: FormSectionProps) => {
                   />
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <Label htmlFor="company">Nazwa firmy*</Label>
                     <Input id="company" name="company" required value={formState.company} onChange={handleChange} />
                   </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="position">Stanowisko</Label>
-                    <Input id="position" name="position" value={formState.position} onChange={handleChange} />
-                  </div>
-                </div>
 
                 <div className="space-y-2">
                   <Label>Wybierz raport*</Label>
