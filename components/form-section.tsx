@@ -283,7 +283,7 @@ const FormContent = ({ defaultReport = [] }: FormSectionProps) => {
                       <div className="w-full">
                         <div className="relative">
                           {/* Main content container with gradient fade */}
-                          <div className={`relative ${!consentExpanded ? "max-h-[1.8em] overflow-hidden" : ""}`} id="consent-details">
+                          <div className={`relative ${!consentExpanded ? "max-h-[2em] overflow-hidden" : ""}`} id="consent-details">
                             <div className="text-sm leading-normal">
                               Przeczytałem(-am) i zrozumiałem(-am){" "}
                               <a href="/polityka-prywatnosci" target="_blank" rel="noopener">
