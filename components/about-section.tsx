@@ -86,11 +86,6 @@ export function AboutSection() {
             Nasze raporty branżowe powstały na bazie bogatego doświadczenia i dokładnych analiz, które każdego dnia pomagają producentom żywności podnosić jakość swoich produktów oraz spełniać wymagania rynkowe i prawne.
             </p>
 
-            <Button asChild className="bg-primary hover:bg-primary/90 text-white">
-              <Link href="https://www.eurofins.pl" target="_blank">
-                Dowiedz się więcej o Eurofins
-              </Link>
-            </Button>
           </div>
         </div>
       </div>
