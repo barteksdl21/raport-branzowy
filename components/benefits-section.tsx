@@ -13,32 +13,32 @@ export function BenefitsSection() {
   const benefits = [
     {
       icon: <TrendingUp className="h-10 w-10 text-eurofins-orange" />,
-      title: "Analiza trendów rynkowych",
+      title: "Zrozum lepiej potrzeby konsumenta",
       description: "Poznaj aktualne trendy rynkowe, które wpływają na Twoją branżę.",
     },
     {
       icon: <ShieldCheck className="h-10 w-10 text-eurofins-orange" />,
-      title: "Bezpieczeństwo produktów",
+      title: "Zwiększ efektywność kontroli jakości",
       description: "Dowiedz się, jak zapewnić najwyższe standardy bezpieczeństwa swoim produktom.",
     },
     {
       icon: <LineChart className="h-10 w-10 text-eurofins-orange" />,
-      title: "Dane porównawcze",
+      title: "Oszczędź czas na analizie danych",
       description: "Porównaj swoje wyniki z danymi branżowymi i poznaj swoją pozycję na rynku.",
     },
     {
       icon: <Lightbulb className="h-10 w-10 text-eurofins-orange" />,
-      title: "Innowacyjne rozwiązania",
+      title: "Wybieraj najlepsze rozwiązania",
       description: "Odkryj nowe technologie i metody badawcze, które mogą usprawnić Twoje procesy.",
     },
     {
       icon: <Target className="h-10 w-10 text-eurofins-orange" />,
-      title: "Zgodność z przepisami",
+      title: "Minimalizuj ryzyko prawne i zabezpiecz swój biznes",
       description: "Bądź na bieżąco z aktualnymi wymogami prawnymi i normami dla Twojej branży.",
     },
     {
       icon: <Zap className="h-10 w-10 text-eurofins-orange" />,
-      title: "Przewaga konkurencyjna",
+      title: "Wzmacniaj swoją pozycję na rynku i zwiększaj zyski",
       description: "Wykorzystaj wiedzę z raportów, aby wyprzedzić konkurencję i zdobyć przewagę na rynku.",
     },
   ]

@@ -24,20 +24,16 @@ export function HeroSection() {
               Raporty Branżowe 2025
             </div>
             <h1 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl lg:text-6xl text-white">
-            Eksperckie raporty i analizy dla rynku spożywczego
+            Zyskaj przewagę dzięki precyzyjnym analizom rynku spożywczego
             </h1>
             <p className="max-w-[600px] text-white/90 md:text-xl">
-              Uzyskaj dostęp do najnowszych raportów branżowych Eurofins Polska. Kompleksowe analizy laboratoryjne dla
-              sektorów: mięsnego, mleczarskiego, owocowo-warzywnego i rybnego.
+              Pobierz bezpłatnie raporty Eurofins i poznaj kluczowe trendy i dane, które pomogą Ci podejmować najlepsze decyzje w kluczowych sektorach branży spożywczej: mięsnej, mleczarskiej, owocowo-warzywnej i rybnej. 
             </p>
             <div className="flex flex-col sm:flex-row gap-4">
               <Button asChild size="lg" className="bg-eurofins-orange hover:bg-eurofins-orange/90 text-white">
                 <Link href="/#formularz">
-                  Pobierz raport <ArrowRight className="ml-2 h-4 w-4" />
+                  Pobierz raport <ArrowRight className="ml-2 h-4 w-4 motion-safe:animate-pulse" />
                 </Link>
-              </Button>
-              <Button asChild variant="outline" size="lg" className="bg-white text-primary hover:bg-white/90">
-                <Link href="/#raporty">Zobacz dostępne raporty</Link>
               </Button>
             </div>
           </div>
@@ -46,7 +42,7 @@ export function HeroSection() {
           >
             <div className="relative aspect-[4/3] w-full overflow-hidden rounded-lg">
               <Image
-                src="/LP_627x400_1.jpg"
+                src="/baner_lp.png"
                 alt="Raporty branżowe Eurofins"
                 fill
                 className="object-cover"

@@ -65,8 +65,8 @@ export default function Footer() {
             <h3 className="text-lg font-bold">Przydatne linki</h3>
             <ul className="space-y-2">
               <li>
-                <Link href="https://eftesty.pl/" target="_blank" className="text-white/80 hover:text-eurofins-orange transition-colors">
-                  Sklep Online
+                <Link href="/#raporty" className="text-white/80 hover:text-eurofins-orange transition-colors">
+                  Raporty
                 </Link>
               </li>
               <li>
@@ -87,15 +87,6 @@ export default function Footer() {
               <li>
                 <Link href="/#faq" className="text-white/80 hover:text-eurofins-orange transition-colors">
                   FAQ
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="https://www.eurofins.pl"
-                  target="_blank"
-                  className="text-white/80 hover:text-eurofins-orange transition-colors"
-                >
-                  Eurofins Polska
                 </Link>
               </li>
               <li>

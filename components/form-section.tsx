@@ -151,7 +151,7 @@ const FormContent = ({ defaultReport = [] }: FormSectionProps) => {
       <div className="container px-4 md:px-6">
         <div className="grid gap-6 lg:grid-cols-2 lg:gap-12 items-center">
           <div className={`space-y-4 ${inView ? "animate-slide-in-left" : "opacity-0"}`}>
-            <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl text-primary">Pobierz raport branżowy</h2>
+            <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl text-primary">Pobierz bezpłatny raport branżowy</h2>
             <p className="text-muted-foreground md:text-xl">
             Wypełnij formularz i otrzymaj wybrany raport bezpośrednio na swój e-mail. Znajdziesz w nim kluczowe informacje o branży, które pomogą Ci podejmować decyzje biznesowe dotyczące bezpieczeństwa i jakości Twoich produktów.
             </p>
@@ -331,7 +331,7 @@ const FormContent = ({ defaultReport = [] }: FormSectionProps) => {
                   className="w-full bg-eurofins-orange hover:bg-eurofins-orange/90 text-white"
                   disabled={isSubmitting}
                 >
-                  {isSubmitting ? "Wysyłanie..." : "Pobierz raport"}
+                  {isSubmitting ? "Wysyłanie..." : "Pobierz bezpłatny raport"}
                 </Button>
 
                 <p className="text-xs text-muted-foreground">
