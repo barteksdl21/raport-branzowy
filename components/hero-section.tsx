@@ -27,12 +27,13 @@ export function HeroSection() {
             Zyskaj przewagę dzięki precyzyjnym analizom rynku spożywczego
             </h1>
             <p className="max-w-[600px] text-white/90 md:text-xl">
-              Pobierz bezpłatnie raporty Eurofins i poznaj kluczowe trendy i dane, które pomogą Ci podejmować najlepsze decyzje w kluczowych sektorach branży spożywczej: mięsnej, mleczarskiej, owocowo-warzywnej i rybnej. 
+              Pobierz bezpłatnie raporty Eurofins i poznaj kluczowe trendy i dane, które pomogą Ci podejmować najlepsze decyzje w kluczowych sektorach branży spożywczej: <strong>mięsnej, mleczarskiej, owocowo-warzywnej i rybnej. </strong>
             </p>
             <div className="flex flex-col sm:flex-row gap-4">
               <Button asChild size="lg" className="bg-eurofins-orange hover:bg-eurofins-orange/90 text-white">
                 <Link href="/#formularz">
-                  Pobierz raport <ArrowRight className="ml-2 h-4 w-4 motion-safe:animate-pulse" />
+                  <strong>Pobierz raport</strong>
+                  <ArrowRight className="ml-2 h-4 w-4" style={{ animation: "nudge 1s ease-in-out infinite" }} />
                 </Link>
               </Button>
             </div>
@@ -62,3 +63,9 @@ export function HeroSection() {
     </section>
   )
 }
+  <style>{`
+    @keyframes nudge {
+      0%, 100% { transform: translateX(0); }
+      50% { transform: translateX(4px); }
+    }
+  `}</style>
