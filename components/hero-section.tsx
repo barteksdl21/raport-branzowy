@@ -14,7 +14,14 @@ export function HeroSection() {
   }, [])
 
   return (
+    
     <section className="relative w-full py-12 md:py-24 lg:py-32 overflow-hidden bg-gradient-to-br from-primary to-primary/90">
+      <style>{`
+        @keyframes nudge {
+          0%, 100% { transform: translateX(0); }
+          50% { transform: translateX(4px); }
+        }
+      `}</style>
       <div className="container px-4 md:px-6">
         <div className="grid gap-6 lg:grid-cols-2 lg:gap-12 items-center">
           <div
@@ -43,7 +50,7 @@ export function HeroSection() {
           >
             <div className="relative aspect-[4/3] w-full overflow-hidden rounded-lg">
               <Image
-                src="/baner_lp.png"
+                src="/LP_627x400_1.jpg"
                 alt="Raporty branżowe Eurofins"
                 fill
                 className="object-cover"
@@ -63,9 +70,3 @@ export function HeroSection() {
     </section>
   )
 }
-  <style>{`
-    @keyframes nudge {
-      0%, 100% { transform: translateX(0); }
-      50% { transform: translateX(4px); }
-    }
-  `}</style>
