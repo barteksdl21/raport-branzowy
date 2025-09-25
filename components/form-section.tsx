@@ -80,6 +80,11 @@ const FormContent = ({ defaultReport = [] }: FormSectionProps) => {
     setIsSubmitting(true);
     setSubmitError(null);
 
+    if (formState.report.length === 0) {
+      setSubmitError("Proszę wybrać przynajmniej jeden raport.");
+      return; 
+    }
+  
     if (!executeRecaptcha) {
       setSubmitError("ReCAPTCHA not loaded yet. Please try again in a moment.");
       setIsSubmitting(false);
@@ -125,7 +130,7 @@ const FormContent = ({ defaultReport = [] }: FormSectionProps) => {
       gaEvent({
         action: 'form_submit',
         category: 'RaportBranzowy',
-        label: formState.report || 'not_selected',
+        label: formState.report.join(', ') || 'not_selected', // Join array for label
         value: 1,
       });
     } catch (error) {
