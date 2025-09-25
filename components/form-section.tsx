@@ -76,74 +76,76 @@ const FormContent = ({ defaultReport = [] }: FormSectionProps) => {
 
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-    setSubmitError(null);
+      e.preventDefault();
+      setSubmitError(null); // Clear any previous errors at the start
 
-    if (formState.report.length === 0) {
-      setSubmitError("Proszę wybrać przynajmniej jeden raport.");
-      return; 
-    }
-  
-    if (!executeRecaptcha) {
-      setSubmitError("ReCAPTCHA not loaded yet. Please try again in a moment.");
-      setIsSubmitting(false);
-      return;
-    }
-
-    let recaptchaToken;
-    try {
-      recaptchaToken = await executeRecaptcha('submit_form_raport_branzowy');
-    } catch (error) {
-      console.error('Error executing reCAPTCHA:', error);
-      setSubmitError('Błąd podczas weryfikacji reCAPTCHA. Spróbuj ponownie.');
-      setIsSubmitting(false);
-      return;
-    }
-
-    if (!recaptchaToken) {
-      setSubmitError("Nie udało się uzyskać tokena reCAPTCHA. Spróbuj ponownie.");
-      setIsSubmitting(false);
-      return;
-    }
-
-    try {
-      const response = await fetch('/api/send-report', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          ...formState,
-          recaptchaToken, // Send v3 token to backend
-        }),
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || 'Failed to send report');
+      // --- 1. Perform all synchronous validation first ---
+      if (formState.report.length === 0) {
+        setSubmitError("Proszę wybrać przynajmniej jeden raport.");
+        return; // Exit before entering the "submitting" state
       }
 
-      setIsSubmitted(true);
-
-      // Track form submission in Google Analytics
-      gaEvent({
-        action: 'form_submit',
-        category: 'RaportBranzowy',
-        label: formState.report.join(', ') || 'not_selected', // Join array for label
-        value: 1,
-      });
-    } catch (error) {
-      console.error('Error submitting form:', error);
-      if (error instanceof Error) {
-        setSubmitError(error.message || 'Wystąpił błąd podczas wysyłania formularza. Spróbuj ponownie później.');
-      } else {
-        setSubmitError('Wystąpił nieoczekiwany błąd. Spróbuj ponownie później.');
+      if (!executeRecaptcha) {
+        setSubmitError("ReCAPTCHA not loaded yet. Please try again in a moment.");
+        return; // Exit before entering the "submitting" state
       }
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
+
+      // --- 2. If validation passes, NOW set the submitting state ---
+      setIsSubmitting(true);
+
+      // --- 3. Proceed with asynchronous operations in a try/catch/finally block ---
+      try {
+        let recaptchaToken;
+        try {
+          recaptchaToken = await executeRecaptcha('submit_form_raport_branzowy');
+        } catch (error) {
+          console.error('Error executing reCAPTCHA:', error);
+          // We throw an error here to be caught by the outer catch block
+          throw new Error('Błąd podczas weryfikacji reCAPTCHA. Spróbuj ponownie.');
+        }
+
+        if (!recaptchaToken) {
+          // Throwing an error is a good way to stop execution and go to the catch block
+          throw new Error("Nie udało się uzyskać tokena reCAPTCHA. Spróbuj ponownie.");
+        }
+
+        const response = await fetch('/api/send-report', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            ...formState,
+            recaptchaToken,
+          }),
+        });
+
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.error || 'Failed to send report');
+        }
+
+        setIsSubmitted(true);
+
+        gaEvent({
+          action: 'form_submit',
+          category: 'RaportBranzowy',
+          label: formState.report.join(', ') || 'not_selected',
+          value: 1,
+        });
+      } catch (error) {
+        console.error('Error submitting form:', error);
+        if (error instanceof Error) {
+          setSubmitError(error.message || 'Wystąpił błąd podczas wysyłania formularza. Spróbuj ponownie później.');
+        } else {
+          setSubmitError('Wystąpił nieoczekiwany błąd. Spróbuj ponownie później.');
+        }
+      } finally {
+        // This block will now reliably run after the async operations are done,
+        // or if any error was thrown inside the `try` block.
+        setIsSubmitting(false);
+      }
+    };
 
   const options = [
     { value: "dairy", label: "Raport branży mleczarskiej" },
