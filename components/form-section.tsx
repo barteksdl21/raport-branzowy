@@ -154,7 +154,7 @@ const FormContent = ({ defaultReport = [] }: FormSectionProps) => {
   ];
 
   return (
-    <section ref={ref} id="formularz" className="w-full py-12 md:py-24 bg-muted scroll-mt-20 md:scroll-mt-12 lg:scroll-mt-4">
+    <section ref={ref} id="formularz" className="w-full py-12 md:py-24 bg-muted scroll-mt-32 md:scroll-mt-28 lg:scroll-mt-12">
       <div className="container px-4 md:px-6">
         <div className="grid gap-6 lg:grid-cols-2 lg:gap-12 items-center">
           <div className={`space-y-4`}>
