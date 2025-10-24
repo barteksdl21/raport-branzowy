@@ -157,7 +157,7 @@ export async function middleware(request: NextRequest) {
   // --- 4. Security Headers ---
   const response = NextResponse.next();
 
-  let scriptSrc = "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com https://www.google-analytics.com https://ssl.google-analytics.com https://www.google.com https://www.gstatic.com https://googletagmanager.com https://googlesyndication.com https://tpc.googlesyndication.com https://pagead2.googlesyndication.com https://www.clarity.ms";
+  let scriptSrc = "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com https://www.google-analytics.com https://ssl.google-analytics.com https://www.google.com https://www.gstatic.com https://googletagmanager.com https://googlesyndication.com https://tpc.googlesyndication.com https://pagead2.googlesyndication.com https://www.clarity.ms https://*.clarity.ms";
   if (process.env.NODE_ENV === 'development') {
     scriptSrc += " 'unsafe-eval'";
   }
@@ -165,14 +165,14 @@ export async function middleware(request: NextRequest) {
   const cspDirectives = [
     "default-src 'self'",
     scriptSrc,
-    "style-src 'self' 'unsafe-inline' https://*.google.com https://www.gstatic.com https://googletagmanager.com https://fonts.googleapis.com https://googlesyndication.com https://www.googletagmanager.com",
-    "img-src 'self' data: blob: https://*.public.blob.vercel-storage.com https://*.google.com https://*.google.pl https://google.pl https://www.gstatic.com https://googletagmanager.com https://www.googletagmanager.com https://*.google-analytics.com https://ssl.google-analytics.com https://googlesyndication.com https://tpc.googlesyndication.com https://pagead2.googlesyndication.com https://*.doubleclick.net https://*.googleadservices.com",
-    "font-src 'self' data: https://*.google.com https://www.gstatic.com https://googletagmanager.com https://www.googletagmanager.com https://fonts.gstatic.com https://fonts.googleapis.com",
-    "connect-src 'self' https://vitals.vercel-insights.com https://*.google-analytics.com https://ssl.google-analytics.com https://*.google.com https://*.supabase.co wss://*.supabase.co https://googletagmanager.com https://www.googletagmanager.com https://googlesyndication.com https://*.doubleclick.net https://stats.g.doubleclick.net https://www.google-analytics.com",
-    "frame-src 'self' https://www.google.com https://www.gstatic.com https://recaptcha.google.com https://googletagmanager.com https://googlesyndication.com https://tpc.googlesyndication.com https://pagead2.googlesyndication.com https://*.doubleclick.net https://www.googletagmanager.com",
-    "worker-src 'self' blob: https://*.google.com https://www.gstatic.com https://googletagmanager.com https://www.googletagmanager.com",
+    "style-src 'self' 'unsafe-inline' https://*.google.com https://www.gstatic.com https://googletagmanager.com https://fonts.googleapis.com https://googlesyndication.com https://www.googletagmanager.com https://*.clarity.ms",
+    "img-src 'self' data: blob: https://*.public.blob.vercel-storage.com https://*.google.com https://*.google.pl https://google.pl https://www.gstatic.com https://googletagmanager.com https://www.googletagmanager.com https://*.google-analytics.com https://ssl.google-analytics.com https://googlesyndication.com https://tpc.googlesyndication.com https://pagead2.googlesyndication.com https://*.doubleclick.net https://*.googleadservices.com https://*.clarity.ms",
+    "font-src 'self' data: https://*.google.com https://www.gstatic.com https://googletagmanager.com https://www.googletagmanager.com https://fonts.gstatic.com https://fonts.googleapis.com https://*.clarity.ms",
+    "connect-src 'self' https://vitals.vercel-insights.com https://*.google-analytics.com https://ssl.google-analytics.com https://*.google.com https://*.supabase.co wss://*.supabase.co https://googletagmanager.com https://www.googletagmanager.com https://googlesyndication.com https://*.doubleclick.net https://stats.g.doubleclick.net https://www.google-analytics.com https://*.clarity.ms",
+    "frame-src 'self' https://www.google.com https://www.gstatic.com https://recaptcha.google.com https://googletagmanager.com https://googlesyndication.com https://tpc.googlesyndication.com https://pagead2.googlesyndication.com https://*.doubleclick.net https://www.googletagmanager.com https://*.clarity.ms",
+    "worker-src 'self' blob: https://*.google.com https://www.gstatic.com https://googletagmanager.com https://www.googletagmanager.com https://*.clarity.ms",
     "object-src 'none'",
-    "frame-ancestors 'self' https://*.google.com https://googletagmanager.com",
+    "frame-ancestors 'self' https://*.google.com https://googletagmanager.com https://*.clarity.ms",
     "form-action 'self' https://googletagmanager.com",
     "upgrade-insecure-requests"
   ];
