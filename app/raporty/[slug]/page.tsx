@@ -5,8 +5,8 @@ import { FileText, ArrowLeft } from "lucide-react"
 import Link from "next/link"
 import { FormSection } from "@/components/form-section"
 import type { Metadata } from 'next';
+import { ArrowRight } from "lucide-react"
 
-// This would typically come from a database or API
 
 export async function generateMetadata(
   { params: paramsPromise }: { params: Promise<{ slug: string }> }
@@ -161,7 +161,7 @@ export default async function ReportDetailPage({ params: paramsPromise }: { para
               </div>
             </div>
           </div>
-          <div className="flex flex-col sm:flex-row gap-4">
+          <div className="flex flex-col sm:flex-row gap-4 sm:hidden">
             <Button asChild size="lg" className="bg-eurofins-orange hover:bg-eurofins-orange/90 text-white">
               <Link href="/#formularz">
                 <strong>Pobierz raport</strong>
