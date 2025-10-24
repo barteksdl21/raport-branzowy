@@ -279,7 +279,6 @@ const FormContent = ({ defaultReport = [] }: FormSectionProps) => {
                       Zapoznałem się i akceptuję politykę prywatności.*
                     </Label>
                   </div>
-
                   <div className="flex items-start space-x-2">
                     <Checkbox
                       id="dataProcessing"
@@ -290,55 +289,42 @@ const FormContent = ({ defaultReport = [] }: FormSectionProps) => {
                     <Label htmlFor="dataProcessing" className="text-sm leading-normal w-full">
                       <div className="w-full">
                         <div className="relative">
-                          {/* TYLKO treść w przycinanym kontenerze */}
-                          <div
-                            id="consent-details"
-                            className={`relative ${!consentExpanded ? "max-h-[3.5em] overflow-hidden" : ""}`}
-                          >
+                          {/* Main content container with gradient fade */}
+                          <div className={`relative ${!consentExpanded ? "max-h-[3em] overflow-hidden" : ""}`} id="consent-details">
                             <div className="text-sm leading-normal">
                               Przeczytałem(-am) i zrozumiałem(-am){" "}
-                              /polityka-prywatnosci
+                              <a href="/polityka-prywatnosci" target="_blank" rel="noopener">
                                 politykę prywatności
                               </a>
-                              . Wyrażam zgodę na przetwarzanie
-                              {!consentExpanded && "..."}
-                              {consentExpanded &&
-                                " moich danych osobowych przez podmioty należące do Sieci Laboratoriów Eurofins w celu przesyłania mi informacji i materiałów handlowych, ofert oraz materiałów marketingowych, w tym newsletterów handlowych i informacyjnych."}
-
+                              . Wyrażam zgodę na przetwarzanie{!consentExpanded && "..."} {consentExpanded && " moich danych osobowych przez podmioty należące do Sieci Laboratoriów Eurofins w celu przesyłania mi informacji i materiałów handlowych, ofert oraz materiałów marketingowych, w tym newsletterów handlowych i informacyjnych."}
+                              
                               {consentExpanded && (
                                 <div className="mt-2 text-muted-foreground">
-                                  Zaznaczając pole 'pobierz', wyrażam zgodę na świadczenie usług drogą elektroniczną, co obejmuje
-                                  również przesyłanie wiadomości, informacji oraz materiałów handlowych, marketingowych i promocyjnych
-                                  za pośrednictwem środków komunikacji elektronicznej.*
+                                  Zaznaczając pole 'pobierz', wyrażam zgodę na świadczenie usług drogą elektroniczną, co obejmuje również przesyłanie wiadomości, informacji oraz materiałów handlowych, marketingowych i promocyjnych za pośrednictwem środków komunikacji elektronicznej.*
                                 </div>
                               )}
+
+                              {/* Inline toggle link placed directly after the paragraph so it sits at the end of the text */}
+                              <a
+                                href="#"
+                                onClick={(e: React.MouseEvent<HTMLAnchorElement>) => { e.preventDefault(); setConsentExpanded((s: boolean) => !s); }}
+                                className="text-eurofins-orange underline text-sm transition-all duration-150 hover:text-eurofins-orange/80 relative z-10"
+                                aria-expanded={consentExpanded}
+                                aria-controls="consent-details"
+                              >
+                                {consentExpanded ? "zwiń ▴" : "rozwiń ▾"}
+                              </a>
                             </div>
 
-                            {/* Gradient tylko nad treścią, nie interaktywny */}
+                            {/* Gradient fade hint when collapsed (non-interactive) */}
                             {!consentExpanded && (
-                              <div className="pointer-events-none absolute bottom-0 left-0 w-full h-8 bg-gradient-to-t from-white to-transparent" />
+                              <div className="absolute bottom-0 left-0 w-full h-8 bg-gradient-to-t from-white to-transparent pointer-events-none" />
                             )}
                           </div>
-
-                          {/* Link poza przycinanym blokiem = zawsze widoczny */}
-                          <button
-                            type="button"
-                            onClick={(e) => {
-                              e.preventDefault()
-                              e.stopPropagation() // żeby tap w label nie aktywował checkboxa
-                              setConsentExpanded((s: boolean) => !s)
-                            }}
-                            className="mt-2 text-eurofins-orange underline text-sm hover:text-eurofins-orange/80"
-                            aria-expanded={consentExpanded}
-                            aria-controls="consent-details"
-                          >
-                            {consentExpanded ? "zwiń ▴" : "rozwiń ▾"}
-                          </button>
                         </div>
                       </div>
                     </Label>
                   </div>
-
                 </div>
 
                 {submitError && (
