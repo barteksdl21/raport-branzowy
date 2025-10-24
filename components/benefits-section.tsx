@@ -61,7 +61,7 @@ export function BenefitsSection() {
           {benefits.map((benefit, index) => (
             <Card
               key={index}
-              className={`border-none shadow-md ${inView ? "animate-slide-up" : "opacity-0"}`}
+              className={`border-none shadow-md`}
             >
               <CardHeader className="pb-2">
                 {benefit.icon}

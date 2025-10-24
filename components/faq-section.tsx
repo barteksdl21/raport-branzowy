@@ -36,9 +36,7 @@ export function FaqSection() {
     <section ref={ref} id="faq" className="w-full py-12 md:py-24 bg-muted">
       <div className="container px-4 md:px-6">
         <div
-          className={`flex flex-col items-center justify-center space-y-4 text-center mb-10 ${
-            inView ? "animate-fade-in" : "opacity-0"
-          }`}
+          className={`flex flex-col items-center justify-center space-y-4 text-center mb-10`}
         >
           <div className="space-y-2">
             <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl text-primary">
@@ -51,7 +49,7 @@ export function FaqSection() {
         </div>
 
         <div
-          className={`max-w-3xl mx-auto ${inView ? "animate-slide-up" : "opacity-0"}`}
+          className={`max-w-3xl mx-auto`}
         >
           <Accordion type="single" collapsible className="w-full">
             {faqs.map((faq, index) => (
@@ -64,7 +62,7 @@ export function FaqSection() {
         </div>
 
         <div
-          className={`mt-10 text-center ${inView ? "animate-fade-in" : "opacity-0"}`}
+          className={`mt-10 text-center`}
         >
           <p className="text-muted-foreground">Chcesz nawiązać współpracę? Skontaktuj się z nami:</p>
           <p className="font-medium text-primary mt-2"><a href="mailto:wyceny-oferta@eurofins.com">wyceny-oferta@eurofins.com</a> | +48 55 272 04 73</p>

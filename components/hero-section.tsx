@@ -25,7 +25,7 @@ export function HeroSection() {
       <div className="container px-4 md:px-6">
         <div className="grid gap-6 lg:grid-cols-2 lg:gap-12 items-center">
           <div
-            className={`space-y-4 ${isVisible ? "animate-fade-in" : "opacity-0"}`}
+            className={`space-y-4`}
           >
             <div className="inline-block rounded-lg bg-eurofins-orange px-3 py-1 text-sm text-white">
               Raporty Branżowe 2025
@@ -46,7 +46,7 @@ export function HeroSection() {
             </div>
           </div>
           <div
-            className={`relative ${isVisible ? "animate-slide-in-right" : "opacity-0"}`}
+            className={`relative`}
           >
             <div className="relative aspect-[4/3] w-full overflow-hidden rounded-lg">
               <Image

@@ -72,7 +72,7 @@ export function ReportsSection() {
           {reports.map((report, index) => (
             <Card
               key={report.id}
-              className={`report-card overflow-hidden ${inView ? "animate-slide-up" : "opacity-0"}`}
+              className={`report-card overflow-hidden`}
             >
               <div className="relative h-48 w-full">
                 <Image src={report.image || "/placeholder.svg"} alt={report.title} fill className="object-contain" />
