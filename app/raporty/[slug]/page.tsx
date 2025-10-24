@@ -147,7 +147,7 @@ export default async function ReportDetailPage({ params: paramsPromise }: { para
       <section className="pt-2 pb-16 bg-white">
         <div className="container mx-auto px-4">
           {/* Report header with image */}
-          <div className="relative h-80 w-full rounded-xl overflow-hidden mb-12">
+          <div className="relative h-80 w-full rounded-xl overflow-hidden mb-4">
             <Image 
               src={report.image} 
               alt={report.title}
@@ -161,7 +161,7 @@ export default async function ReportDetailPage({ params: paramsPromise }: { para
               </div>
             </div>
           </div>
-          <div className="flex flex-col sm:flex-row gap-4 sm:hidden">
+          <div className="flex flex-col gap-4 md:hidden mb-4">
             <Button asChild size="lg" className="bg-eurofins-orange hover:bg-eurofins-orange/90 text-white">
               <Link href="/#formularz">
                 <strong>Pobierz raport</strong>
