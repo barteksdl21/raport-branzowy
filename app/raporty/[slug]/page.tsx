@@ -137,7 +137,12 @@ export default async function ReportDetailPage({ params: paramsPromise }: { para
 
   return (
     <div className="min-h-screen">
-      
+      <style>{`
+        @keyframes nudge {
+          0%, 100% { transform: translateX(0); }
+          50% { transform: translateX(4px); }
+        }
+      `}</style>
       {/* Main content area for report details */}
       <section className="pt-2 pb-16 bg-white">
         <div className="container mx-auto px-4">
@@ -156,7 +161,14 @@ export default async function ReportDetailPage({ params: paramsPromise }: { para
               </div>
             </div>
           </div>
-          
+          <div className="flex flex-col sm:flex-row gap-4">
+            <Button asChild size="lg" className="bg-eurofins-orange hover:bg-eurofins-orange/90 text-white">
+              <Link href="/#formularz">
+                <strong>Pobierz raport</strong>
+                <ArrowRight className="ml-2 h-4 w-4" style={{ animation: "nudge 1s ease-in-out infinite" }} />
+              </Link>
+            </Button>
+          </div>
           {/* Report content */}
           <div className="grid md:grid-cols-3 gap-8">
             {/* Main description */}
