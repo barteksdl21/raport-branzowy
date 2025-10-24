@@ -157,7 +157,7 @@ export async function middleware(request: NextRequest) {
   // --- 4. Security Headers ---
   const response = NextResponse.next();
 
-  let scriptSrc = "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com https://www.google-analytics.com https://ssl.google-analytics.com https://www.google.com https://www.gstatic.com https://googletagmanager.com https://googlesyndication.com https://tpc.googlesyndication.com https://pagead2.googlesyndication.com";
+  let scriptSrc = "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com https://www.google-analytics.com https://ssl.google-analytics.com https://www.google.com https://www.gstatic.com https://googletagmanager.com https://googlesyndication.com https://tpc.googlesyndication.com https://pagead2.googlesyndication.com https://www.clarity.ms";
   if (process.env.NODE_ENV === 'development') {
     scriptSrc += " 'unsafe-eval'";
   }
