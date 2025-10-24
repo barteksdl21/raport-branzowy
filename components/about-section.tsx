@@ -35,7 +35,7 @@ export function AboutSection() {
             </div>
           </div>
 
-          <div className={`space-y-6 ${inView ? "animate-slide-in-right" : "opacity-0"}`}>
+          <div className={`space-y-6`}>
             <div className="inline-block rounded-lg bg-eurofins-orange px-3 py-1 text-sm text-white">
               O Eurofins Polska
             </div>

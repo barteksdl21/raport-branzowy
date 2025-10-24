@@ -303,17 +303,6 @@ const FormContent = ({ defaultReport = [] }: FormSectionProps) => {
                                   Zaznaczając pole 'pobierz', wyrażam zgodę na świadczenie usług drogą elektroniczną, co obejmuje również przesyłanie wiadomości, informacji oraz materiałów handlowych, marketingowych i promocyjnych za pośrednictwem środków komunikacji elektronicznej.*
                                 </div>
                               )}
-
-                              {/* Inline toggle link placed directly after the paragraph so it sits at the end of the text */}
-                              <a
-                                href="#"
-                                onClick={(e: React.MouseEvent<HTMLAnchorElement>) => { e.preventDefault(); setConsentExpanded((s: boolean) => !s); }}
-                                className="text-eurofins-orange underline text-sm transition-all duration-150 hover:text-eurofins-orange/80 relative z-10"
-                                aria-expanded={consentExpanded}
-                                aria-controls="consent-details"
-                              >
-                                {consentExpanded ? "zwiń ▴" : "rozwiń ▾"}
-                              </a>
                             </div>
 
                             {/* Gradient fade hint when collapsed (non-interactive) */}
@@ -321,6 +310,16 @@ const FormContent = ({ defaultReport = [] }: FormSectionProps) => {
                               <div className="absolute bottom-0 left-0 w-full h-8 bg-gradient-to-t from-white to-transparent pointer-events-none" />
                             )}
                           </div>
+                          {/* Inline toggle link placed directly after the paragraph so it sits at the end of the text */}
+                          <a
+                            href="#"
+                            onClick={(e: React.MouseEvent<HTMLAnchorElement>) => { e.preventDefault(); setConsentExpanded((s: boolean) => !s); }}
+                            className="text-eurofins-orange underline text-sm transition-all duration-150 hover:text-eurofins-orange/80 relative z-10"
+                            aria-expanded={consentExpanded}
+                            aria-controls="consent-details"
+                          >
+                            {consentExpanded ? "zwiń ▴" : "rozwiń ▾"}
+                          </a>
                         </div>
                       </div>
                     </Label>
