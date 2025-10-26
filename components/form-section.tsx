@@ -221,6 +221,7 @@ const FormContent = ({ defaultReport = [] }: FormSectionProps) => {
                       <Button
                         variant="outline"
                         className="w-full justify-between truncate"
+                        style={{border: "1px solid orange"}}
                       >
                         {formState.report.length > 0
                           ? (() => {
@@ -238,7 +239,7 @@ const FormContent = ({ defaultReport = [] }: FormSectionProps) => {
                               // Only one selected — just show it
                               return joined;
                             })()
-                          : "Wybierz raport"}
+                          : "⮟ Wybierz raport"}
                       </Button>
                     </PopoverTrigger>
                     <PopoverContent
