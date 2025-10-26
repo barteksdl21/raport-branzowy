@@ -12,6 +12,7 @@ import { useInView } from "react-intersection-observer"
 import { CheckCircle2 } from "lucide-react";
 import { GoogleReCaptchaProvider, useGoogleReCaptcha } from 'react-google-recaptcha-v3';
 import { event as gaEvent } from '../lib/gtag';
+import { ChevronDown } from "lucide-react"; 
 
 interface FormSectionProps {
   defaultReport?: string[];
@@ -218,29 +219,32 @@ const FormContent = ({ defaultReport = [] }: FormSectionProps) => {
 
                   <Popover>
                     <PopoverTrigger asChild>
-                      <Button
-                        variant="outline"
-                        className="w-full justify-between truncate"
-                        style={{border: "1px solid orange"}}
-                      >
-                        {formState.report.length > 0
-                          ? (() => {
-                              const selectedLabels = options
-                                .filter((o) => formState.report.includes(o.value))
-                                .map((o) => o.label);
+  <Button
+    variant="outline"
+    className="w-full justify-start" // 'justify-start' forces left-alignment; overrides default centering
+    style={{ border: "1px solid orange" }} // Ditch this for prod
+  >
+    <div className="flex items-center truncate"> {/* Tight group, left-hugging */}
+      <ChevronDown className="h-4 w-2 shrink-0 mr-2" /> {/* Snug to text */}
+      <span className="truncate"> {/* Text truncates within the group */}
+        {formState.report.length > 0
+          ? (() => {
+              const selectedLabels = options
+                .filter((o) => formState.report.includes(o.value))
+                .map((o) => o.label);
 
-                              const joined = selectedLabels.join(", ");
+              const joined = selectedLabels.join(", ");
 
-                              // If more than one selected, shorten and add count
-                              if (selectedLabels.length > 1) {
-                                return `${selectedLabels.length} raporty`;
-                              }
+              if (selectedLabels.length > 1) {
+                return `${selectedLabels.length} raporty`;
+              }
 
-                              // Only one selected — just show it
-                              return joined;
-                            })()
-                          : "⮟ Wybierz raport"}
-                      </Button>
+              return joined;
+            })()
+          : "Wybierz raport"}
+      </span>
+    </div>
+  </Button>
                     </PopoverTrigger>
                     <PopoverContent
                       className="w-full p-2"
