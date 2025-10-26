@@ -105,7 +105,7 @@ export default function Header() {
               Kontakt
             </Link>
             <Button asChild className="bg-eurofins-orange hover:bg-eurofins-orange/90 text-white mx-4">
-              <Link href="/#formularz" onClick={() => setIsMobileMenuOpen(false)}>
+              <Link href="#formularzSpacer" onClick={() => setIsMobileMenuOpen(false)}>
                 Pobierz raport
               </Link>
             </Button>
