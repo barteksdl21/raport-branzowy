@@ -163,7 +163,7 @@ export default async function ReportDetailPage({ params: paramsPromise }: { para
           </div>
           <div className="flex flex-col gap-4 md:hidden mb-4">
             <Button asChild size="lg" className="bg-eurofins-orange hover:bg-eurofins-orange/90 text-white">
-              <Link href="#formularz">
+              <Link href="#formularzSpacer">
                 <strong>Pobierz raport</strong>
                 <ArrowRight className="ml-2 h-4 w-4" style={{ animation: "nudge 1s ease-in-out infinite" }} />
               </Link>

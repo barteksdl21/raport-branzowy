@@ -154,18 +154,20 @@ const FormContent = ({ defaultReport = [] }: FormSectionProps) => {
   ];
 
   return (
-    <section ref={ref} id="formularz" className="w-full py-12 md:py-24 bg-muted">
+    <>
+    <div id="formularzSpacer" style={{ height: '100px', marginTop: '-100px', visibility: 'hidden' }} />
+    <section ref={ref} id="formularz" className="w-full py-12 md:py-24 bg-muted scroll-mt-24">
       <div className="container px-4 md:px-6">
         <div className="grid gap-6 lg:grid-cols-2 lg:gap-12 items-center">
           <div className={`space-y-4`}>
             <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl text-primary">Pobierz bezpłatny raport branżowy</h2>
             <p className="text-muted-foreground md:text-xl">
-            Wypełnij formularz i otrzymaj wybrany raport bezpośrednio na swój e-mail. Znajdziesz w nim kluczowe informacje o branży, które pomogą Ci podejmować decyzje biznesowe dotyczące bezpieczeństwa i jakości Twoich produktów.
+              Wypełnij formularz i zdobądź przewagę konkurencyjną. Dowiedz się, jakie standardy bezpieczeństwa obowiązują w Twojej branży.
             </p>
             <div className="space-y-2">
               <div className="flex items-center">
                 <CheckCircle2 className="h-5 w-5 text-eurofins-orange mr-2" />
-                <span>Szczegółowe analizy danych</span>
+                <span>Dane z setek tysięcy testów laboratoryjnych</span>
               </div>
               <div className="flex items-center">
                 <CheckCircle2 className="h-5 w-5 text-eurofins-orange mr-2" />
@@ -177,7 +179,7 @@ const FormContent = ({ defaultReport = [] }: FormSectionProps) => {
               </div>
               <div className="flex items-center">
                 <CheckCircle2 className="h-5 w-5 text-eurofins-orange mr-2" />
-                <span>Rekomendacje dla producentów</span>
+                <span>Strategie zapewnienia jakości</span>
               </div>
               <div className="flex items-center">
                 <CheckCircle2 className="h-5 w-5 text-eurofins-orange mr-2" />
@@ -189,41 +191,31 @@ const FormContent = ({ defaultReport = [] }: FormSectionProps) => {
           <div className={`bg-white p-6 rounded-lg shadow-lg`}>
             {!isSubmitted ? (
               <form onSubmit={handleSubmit} className="space-y-4">
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="firstName">Imię</Label>
+                <div className="grid sm:grid-cols-2 gap-4">
                     <Input
                       id="firstName"
                       name="firstName"
                       value={formState.firstName}
                       onChange={handleChange}
+                      placeholder="Imię"
                     />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="lastName">Nazwisko</Label>
-                    <Input id="lastName" name="lastName" value={formState.lastName} onChange={handleChange} />
-                  </div>
+                    <Input id="lastName" name="lastName" value={formState.lastName} onChange={handleChange} placeholder="Nazwisko" />
                 </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="email">Email*</Label>
-                  <Input
-                    id="email"
-                    name="email"
-                    type="email"
-                    required
-                    value={formState.email}
-                    onChange={handleChange}
-                  />
-                </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="company">Nazwa firmy*</Label>
-                    <Input id="company" name="company" required value={formState.company} onChange={handleChange} />
+                <div className="grid sm:grid-cols-2 gap-4">
+                    <Input
+                      id="email"
+                      name="email"
+                      type="email"
+                      required
+                      value={formState.email}
+                      onChange={handleChange}
+                      placeholder="E-mail*"
+                    />
+                      <Input id="company" name="company" required value={formState.company} onChange={handleChange} placeholder="Nazwa firmy*" />
                   </div>
 
-                <div className="space-y-2">
-                  <Label>Wybierz raport*</Label>
+
+
                   <Popover>
                     <PopoverTrigger asChild>
                       <Button
@@ -265,7 +257,6 @@ const FormContent = ({ defaultReport = [] }: FormSectionProps) => {
                       ))}
                     </PopoverContent>
                   </Popover>
-                </div>
 
                 <div className="space-y-4">
                   <div className="flex items-start space-x-2">
@@ -366,6 +357,7 @@ const FormContent = ({ defaultReport = [] }: FormSectionProps) => {
         </div>
       </div>
     </section>
+    </>
   )
 }
 

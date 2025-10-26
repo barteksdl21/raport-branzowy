@@ -56,7 +56,7 @@ export default function Header() {
 
         <div className="hidden md:block">
           <Button asChild className="bg-eurofins-orange hover:bg-eurofins-orange/90 text-white">
-            <Link href="#formularz">Pobierz raport</Link>
+            <Link href="#formularzSpacer">Pobierz raport</Link>
           </Button>
         </div>
 

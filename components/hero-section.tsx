@@ -27,9 +27,6 @@ export function HeroSection() {
           <div
             className={`space-y-4`}
           >
-            <div className="inline-block rounded-lg bg-eurofins-orange px-3 py-1 text-sm text-white">
-              Raporty Branżowe 2025
-            </div>
             <h1 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl lg:text-6xl text-white">
             Zyskaj przewagę dzięki precyzyjnym analizom rynku spożywczego
             </h1>
@@ -38,7 +35,7 @@ export function HeroSection() {
             </p>
             <div className="flex flex-col sm:flex-row gap-4">
               <Button asChild size="lg" className="bg-eurofins-orange hover:bg-eurofins-orange/90 text-white">
-                <Link href="/#formularz">
+                <Link href="#formularzSpacer">
                   <strong>Pobierz raport</strong>
                   <ArrowRight className="ml-2 h-4 w-4" style={{ animation: "nudge 1s ease-in-out infinite" }} />
                 </Link>

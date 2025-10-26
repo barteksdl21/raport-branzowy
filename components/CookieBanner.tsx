@@ -37,50 +37,45 @@ const CookieBanner = () => {
     return null;
   }
 
-  return (
-    <div style={{
-      position: 'fixed',
-      bottom: '0',
-      left: '0',
-      width: '100%',
-      backgroundColor: 'hsl(var(--primary))', // Navy blue from globals.css
-      color: 'hsl(var(--primary-foreground))',
-      padding: '12px',
-      textAlign: 'center',
-      zIndex: 1000,
-      boxShadow: '0 -2px 10px rgba(0,0,0,0.3)'
-    }}>
-      <p style={{ margin: '0 0 15px 0', fontSize: '14px', lineHeight: '1.6' }}>
-        Używamy plików cookies, aby zapewnić najlepszą jakość korzystania z naszej witryny. Kontynuując, wyrażasz zgodę na ich użycie. Dowiedz się więcej w naszej{' '}
-        <Link href="/polityka-prywatnosci" style={{ color: 'hsl(var(--secondary))', textDecoration: 'underline' }}>
-          polityce prywatności
-        </Link>.
-        <button
-        onClick={handleAccept}
-        style={{
-          backgroundColor: 'hsl(var(--secondary))', // Orange from globals.css
-          color: 'hsl(var(--primary-foreground))',
-          border: 'none',
-          padding: '2px 24px',
-          marginLeft: '10px',
-          textAlign: 'center',
-          textDecoration: 'none',
-          display: 'inline-block',
-          fontSize: '12px',
-          fontWeight: 'bold',
-          cursor: 'pointer',
-          borderRadius: '5px',
-          transition: 'background-color 0.3s ease'
-        }}
-        onMouseOver={(e) => (e.currentTarget.style.backgroundColor = 'hsl(30 100% 45%)')} // Darker orange on hover, derived from --secondary
-        onMouseOut={(e) => (e.currentTarget.style.backgroundColor = 'hsl(var(--secondary))')}
-      >
-        Akceptuję
-      </button>
-      </p>
-
-    </div>
-  );
+return (
+  <div style={{
+    position: 'fixed',
+    bottom: '0',
+    left: '0',
+    width: '100%',
+    backgroundColor: 'hsl(var(--primary))', // Navy blue from globals.css
+    color: 'hsl(var(--primary-foreground))',
+    padding: '12px',
+    textAlign: 'center',
+    zIndex: 1000,
+    boxShadow: '0 -2px 10px rgba(0,0,0,0.3)'
+  }}>
+    <p style={{ margin: '0 0 12px 0', fontSize: '11px', lineHeight: '1.6' }}>
+      Używamy plików cookies, aby zapewnić najlepszą jakość korzystania z naszej witryny. Kontynuując, wyrażasz zgodę na ich użycie. Dowiedz się więcej w naszej polityce prywatności.
+    </p>
+    <button
+      onClick={handleAccept}
+      style={{
+        backgroundColor: 'hsl(var(--secondary))', // Orange from globals.css
+        color: 'hsl(var(--primary-foreground))',
+        border: 'none',
+        padding: '4px 24px',
+        textAlign: 'center',
+        textDecoration: 'none',
+        display: 'inline-block',
+        fontSize: '12px',
+        fontWeight: 'bold',
+        cursor: 'pointer',
+        borderRadius: '5px',
+        transition: 'background-color 0.3s ease'
+      }}
+      onMouseOver={(e) => (e.currentTarget.style.backgroundColor = 'hsl(30 100% 45%)')} // Darker orange on hover, derived from --secondary
+      onMouseOut={(e) => (e.currentTarget.style.backgroundColor = 'hsl(var(--secondary))')}
+    >
+      Akceptuję
+    </button>
+  </div>
+);
 };
 
 export default CookieBanner;
